@@ -1,0 +1,8 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        products:
+            uri_prefix: /images/bootcamps
+            upload_destination: '%kernel.project_dir%/public/images/bootcamps'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
