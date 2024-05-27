@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -35,6 +37,17 @@ class Product
 
     #[ORM\Column(type: Types::FLOAT)]
     private ?float $duration = null;
+
+    /**
+     * @var Collection<int, Gallery>
+     */
+    #[ORM\OneToMany(targetEntity: Gallery::class, mappedBy: 'idBootcamps')]
+    private Collection $galleries;
+
+    public function __construct()
+    {
+        $this->galleries = new ArrayCollection();
+    }
 
     public const DURATION_HALF_DAY = 4.0; // 1/2 journée en heures
     public const DURATION_FULL_DAY = 8.0; // 1 journée en heures
@@ -116,5 +129,39 @@ class Product
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Gallery>
+     */
+    public function getGalleries(): Collection
+    {
+        return $this->galleries;
+    }
+
+    public function addGallery(Gallery $gallery): static
+    {
+        if (!$this->galleries->contains($gallery)) {
+            $this->galleries->add($gallery);
+            $gallery->setIdBootcamps($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGallery(Gallery $gallery): static
+    {
+        if ($this->galleries->removeElement($gallery)) {
+            // set the owning side to null (unless already changed)
+            if ($gallery->getIdBootcamps() === $this) {
+                $gallery->setIdBootcamps(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->forfait;
     }
 }

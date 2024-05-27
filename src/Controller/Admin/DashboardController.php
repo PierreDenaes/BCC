@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Product;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\ProductCrudController;
+use App\Entity\Gallery;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -47,5 +48,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Les BootCamps', 'fa-solid fa-campground', Product::class);
         yield MenuItem::linkToCrud('Utilisateur', 'fa fa-user', User::class);
+        yield MenuItem::linkToCrud('Galerie Photos', 'fa-solid fa-image', Gallery::class);
     }
 }
