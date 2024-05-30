@@ -10,3 +10,7 @@ vich_uploader:
             uri_prefix: /images/gallery
             upload_destination: '%kernel.project_dir%/public/images/gallery'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+        avatars:
+            uri_prefix: /images/avatars
+            upload_destination: '%kernel.project_dir%/public/images/avatars'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

@@ -1,20 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
+{% block title %}Mon Profil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Mon Profil</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/Users/pierredenaes/Sites/bootcampsC/src/Controller/ProfileController.php</code></li>
-        <li>Your template at <code>/Users/pierredenaes/Sites/bootcampsC/templates/profile/index.html.twig</code></li>
-    </ul>
-</div>
+    <p>Nom: {{ profile.name }}</p>
+    <p>Prénom: {{ profile.firstname }}</p>
+    <p>Entreprise: {{ profile.companyName }}</p>
+    <p>SIRET: {{ profile.siretNumber }}</p>
+    <p>Adresse de facturation: {{ profile.billingAddress }}</p>
+    <p>Ville de facturation: {{ profile.billingCity }}</p>
+    <p>Code postal: {{ profile.zipCode }}</p>
+    <p>Téléphone: {{ profile.phoneNumber }}</p>
 {% endblock %}
