@@ -25,6 +25,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "lineicons": "^1.0.3"
+        "lineicons": "^1.0.3",
+        "swiper": "^11.1.3"
     }
 }

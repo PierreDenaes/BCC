@@ -1,17 +1,17 @@
 #home{
-    background-image: url('../img/BackgroundPrincipal.jpg');
+    background-image: url('../img/logo-accueil.png');
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: cover;
+    background-color: #000;
 }
 
 
-span {
+.sidebar-link span {
     color: #fff;
     font-weight: 600;
     font-size: 1.15rem;
     text-decoration: none;
-}
+} 
 
 .textAccueil {
     color: #fff;

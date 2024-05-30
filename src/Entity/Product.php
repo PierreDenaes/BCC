@@ -38,11 +38,24 @@ class Product
     #[ORM\Column(type: Types::FLOAT)]
     private ?float $duration = null;
 
+    // Nouveau champ pour le fichier de l'image de fond
+    #[Vich\UploadableField(mapping: 'products', fileNameProperty: 'bgName')]
+    private ?File $bgFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $bgName = null;
+
     /**
      * @var Collection<int, Gallery>
      */
     #[ORM\OneToMany(targetEntity: Gallery::class, mappedBy: 'idBootcamps')]
     private Collection $galleries;
+
+    #[ORM\Column]
+    private ?float $tarifBase = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $level = null;
 
     public function __construct()
     {
@@ -107,6 +120,30 @@ class Product
         return $this->imageName;
     }
 
+    public function setBgFile(?File $bgFile = null): void
+    {
+        $this->bgFile = $bgFile;
+
+        if (null !== $bgFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getBgFile(): ?File
+    {
+        return $this->bgFile;
+    }
+
+    public function setBgName(?string $bgName): void
+    {
+        $this->bgName = $bgName;
+    }
+
+    public function getBgName(): ?string
+    {
+        return $this->bgName;
+    }
+
     public function getForfait(): ?string
     {
         return $this->forfait;
@@ -163,5 +200,29 @@ class Product
     public function __toString(): string
     {
         return $this->forfait;
+    }
+
+    public function getTarifBase(): ?float
+    {
+        return $this->tarifBase;
+    }
+
+    public function setTarifBase(float $tarifBase): static
+    {
+        $this->tarifBase = $tarifBase;
+
+        return $this;
+    }
+
+    public function getLevel(): ?string
+    {
+        return $this->level;
+    }
+
+    public function setLevel(string $level): static
+    {
+        $this->level = $level;
+
+        return $this;
     }
 }

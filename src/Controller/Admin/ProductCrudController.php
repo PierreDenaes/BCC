@@ -10,7 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 
 class ProductCrudController extends AbstractCrudController
 {
@@ -41,12 +41,21 @@ class ProductCrudController extends AbstractCrudController
                     '1 journée (8 heures)' => (string)Product::DURATION_FULL_DAY,
                     '2 jours (16 heures)' => (string)Product::DURATION_TWO_DAYS,
                 ]),
+            NumberField::new('tarifBase', 'Tarif de base')->setNumDecimals(2),
             ImageField::new('imageName', 'Photo Bootcamps')
             ->setBasePath('/images/bootcamps')
             ->setUploadDir('public/images/bootcamps')  // définissez le répertoire d'upload ici
             ->onlyOnIndex(),
     
-            VichImageField::new('imageFile', 'Image File')
+            VichImageField::new('imageFile', 'Photo Bootcamps')
+            ->setTemplatePath('admin/field/vich_image_widget.html.twig') // chemin vers votre nouveau template personnalisé
+            ->hideOnIndex(),
+            ImageField::new('bgName', 'Background Bootcamps')
+            ->setBasePath('/images/bootcamps')
+            ->setUploadDir('public/images/bootcamps')  // définissez le répertoire d'upload ici
+            ->onlyOnIndex(),
+    
+            VichImageField::new('bgFile', 'Background Bootcamps')
             ->setTemplatePath('admin/field/vich_image_widget.html.twig') // chemin vers votre nouveau template personnalisé
             ->hideOnIndex()
         ];
