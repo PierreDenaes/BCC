@@ -7,10 +7,8 @@ use App\Entity\Profile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Text;
 
 class ProfileType extends AbstractType
 {
@@ -25,27 +23,28 @@ class ProfileType extends AbstractType
                 'download_uri' => true,
                 'image_uri' => true,
                 'asset_helper' => true,
-                ])
+            ])
             ->add('name')
             ->add('firstname')
             ->add('isCompany', CheckboxType::class, [
                 'label' => 'Est-ce une entreprise ?',
                 'required' => false,
+                'attr' => ['id' => 'isCompanyCheckbox'],
             ])
             ->add('companyName', TextType::class, [
                 'label' => 'Nom de l\'entreprise',
                 'required' => false,
+                'attr' => ['id' => 'companyNameField'],
             ])
             ->add('siretNumber', TextType::class, [
                 'label' => 'Numéro SIRET',
                 'required' => false,
+                'attr' => ['id' => 'siretNumberField'],
             ])
             ->add('billingAddress')
             ->add('billingCity')
             ->add('zipCode')
-            ->add('phoneNumber')
-            
-        ;
+            ->add('phoneNumber');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,16 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Profil{% endblock %}
+{% block title %}Mon Profil
+{% endblock %}
 
 {% block body %}
-    <h1>Mon Profil</h1>
-    <img src="{{ asset('images/avatars/' ~ profile.avatarName)}}" alt="">
-    <p>Nom: {{ profile.name }}</p>
-    <p>Prénom: {{ profile.firstname }}</p>
-    <p>Entreprise: {{ profile.companyName }}</p>
-    <p>SIRET: {{ profile.siretNumber }}</p>
-    <p>Adresse de facturation: {{ profile.billingAddress }}</p>
-    <p>Ville de facturation: {{ profile.billingCity }}</p>
-    <p>Code postal: {{ profile.zipCode }}</p>
-    <p>Téléphone: {{ profile.phoneNumber }}</p>
+	<div class="container-fluid">
+		<h1>Mon Profil</h1>
+		<img src="{{ asset('images/avatars/' ~ profile.avatarName) }}" alt="">
+		<p>Nom:
+			{{ profile.name }}</p>
+		<p>Prénom:
+			{{ profile.firstname }}</p>
+
+		{% if profile.isCompany %}
+			<p>Entreprise:
+				{{ profile.companyName }}</p>
+			<p>SIRET:
+				{{ profile.siretNumber }}</p>
+		{% endif %}
+
+		<p>Adresse de facturation:
+			{{ profile.billingAddress }}</p>
+		<p>Ville de facturation:
+			{{ profile.billingCity }}</p>
+		<p>Code postal:
+			{{ profile.zipCode }}</p>
+		<p>Téléphone:
+			{{ profile.phoneNumber }}</p>
+	</div>
 {% endblock %}
