@@ -1,0 +1,25 @@
+{# templates/booking/form.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1>Formulaire de réservation pour
+		</h1>
+
+		{{ form_start(form) }}
+		{{ form_widget(form) }}
+		<button class="btn">Réserver</button>
+		{{ form_end(form) }}
+
+		{% if app.session.flashBag.has('error') %}
+			<div class="alert alert-danger">
+				{% for message in app.session.flashBag.get('error') %}
+					{{ message }}
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

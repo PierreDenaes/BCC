@@ -43,6 +43,12 @@
 					<span>Profil</span>
 				</a>
 			</li>
+			<li class="sidebar-item">
+				<a href="{{ path('book')}}" class="sidebar-link">
+					<i class="lni lni-friendly"></i>
+					<span>Reserver</span>
+				</a>
+			</li>
 			{% if is_granted('ROLE_ADMIN') %}
 			<li class="sidebar-item">
 				<a href="{{ path('admin') }}" class="sidebar-link">

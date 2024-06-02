@@ -15,8 +15,8 @@ class Booking
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $bookAt = null;
+    #[ORM\Column(type: "datetime")]
+    private ?\DateTimeInterface $bookAt = null;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $period = null;
@@ -33,9 +33,9 @@ class Booking
     private ?Profile $profile = null;
 
     /**
-     * @var Collection<int, Participants>
+     * @var Collection<int, Participant>
      */
-    #[ORM\OneToMany(targetEntity: Participants::class, mappedBy: 'booking')]
+    #[ORM\OneToMany(targetEntity: Participants::class, mappedBy: 'booking', cascade: ['persist', 'remove'])]
     private Collection $participants;
 
     public function __construct()
@@ -43,19 +43,17 @@ class Booking
         $this->participants = new ArrayCollection();
     }
 
-    
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBookAt(): ?\DateTimeImmutable
+    public function getBookAt(): ?\DateTimeInterface
     {
         return $this->bookAt;
     }
 
-    public function setBookAt(\DateTimeImmutable $bookAt): static
+    public function setBookAt(\DateTimeInterface $bookAt): static
     {
         $this->bookAt = $bookAt;
 
@@ -74,12 +72,12 @@ class Booking
         return $this;
     }
 
-    public function isGroup(): ?bool
+    public function getIsGroup(): ?bool
     {
         return $this->isGroup;
     }
 
-    public function setGroup(bool $isGroup): static
+    public function setIsGroup(bool $isGroup): static
     {
         $this->isGroup = $isGroup;
 
@@ -139,5 +137,4 @@ class Booking
 
         return $this;
     }
-
 }
