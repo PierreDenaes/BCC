@@ -16,6 +16,7 @@
     <body>
         {{ include('elements/menu.html.twig') }}
         {{ include('elements/message.html.twig') }}
+        {% block modal %}{% endblock %}
         {% block body %}{% endblock %}
     </body>
 </html>
