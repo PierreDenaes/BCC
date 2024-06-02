@@ -57,9 +57,16 @@ class Product
     #[ORM\Column(length: 50)]
     private ?string $level = null;
 
+    /**
+     * @var Collection<int, Booking>
+     */
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'product')]
+    private Collection $bookings;
+
     public function __construct()
     {
         $this->galleries = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public const DURATION_HALF_DAY = 4.0; // 1/2 journée en heures
@@ -222,6 +229,36 @@ class Product
     public function setLevel(string $level): static
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getProduct() === $this) {
+                $booking->setProduct(null);
+            }
+        }
 
         return $this;
     }
