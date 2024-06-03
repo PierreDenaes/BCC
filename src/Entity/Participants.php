@@ -63,4 +63,8 @@ class Participants
 
         return $this;
     }
+    public function __toString(): string
+    {
+        return $this->name.' '.$this->email;
+    }
 }

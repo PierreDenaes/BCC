@@ -2,7 +2,7 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import frLocale from '@fullcalendar/core/locales/fr';  // Importation de la locale française
-
+import '../styles/profileform.scss';
 // Fonction pour initialiser FullCalendar
 function initializeCalendar() {
     const calendarEl = document.getElementById('calendar');
@@ -62,6 +62,42 @@ function openBookingForm(date, forfait) {
 
             // Add event listener
             productField.addEventListener('change', togglePeriodField);
+
+            // Gérer l'affichage des participants
+            const isGroupCheckbox = document.getElementById('booking_isGroup');
+            const participantsContainer = document.getElementById('participantsContainer');
+            const participantList = document.getElementById('participant-list');
+            const addParticipantButton = document.getElementById('add-participant');
+            let index = participantList.children.length;
+
+            function toggleParticipantsContainer() {
+                if (isGroupCheckbox.checked) {
+                    participantsContainer.style.display = '';
+                } else {
+                    participantsContainer.style.display = 'none';
+                }
+            }
+
+            // Initial check
+            toggleParticipantsContainer();
+
+            // Add event listener
+            isGroupCheckbox.addEventListener('change', toggleParticipantsContainer);
+
+            // Add participant
+            addParticipantButton.addEventListener('click', () => {
+                let newLi = document.createElement('li');
+                let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
+                newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                participantList.appendChild(newLi);
+            });
+
+            // Remove participant
+            participantList.addEventListener('click', (e) => {
+                if (e.target && e.target.classList.contains('remove-participant')) {
+                    e.target.parentElement.remove();
+                }
+            });
         })
         .catch(error => console.warn('Error fetching the form:', error));
 }
