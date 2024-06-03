@@ -1,10 +1,14 @@
 {# templates/booking/form.html.twig #}
 {% block modal %}
     <div class="container-fluid">
-        <h1>Formulaire de réservation pour</h1>
+        <h1>Formulaire de réservation</h1>
 
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
+        {{ form_start(form, {'attr': {'id': 'bookingForm'}}) }}
+        {# {{ form_widget(form.bookAt) }} Champ caché bookAt #}
+        {{ form_widget(form.product) }}
+        {{ form_widget(form.period) }}
+        {{ form_widget(form.isGroup) }}
+        {{ form_widget(form.participants) }}
         <button class="btn">Réserver</button>
         {{ form_end(form) }}
 

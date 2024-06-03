@@ -2,10 +2,11 @@ import './bootstrap.js';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import frLocale from '@fullcalendar/core/locales/fr';  // Importation de la locale française
 import Swiper from 'swiper';
 import 'swiper/swiper-bundle.css';
-require('bootstrap');
-require('lineicons/web-font/lineicons.css');
+import 'bootstrap';
+import 'lineicons/web-font/lineicons.css';
 import './styles/app.scss';
 
 const hamburger = document.querySelector('#toggle-btn');
@@ -16,14 +17,15 @@ hamburger.addEventListener('click', () => {
 
 // Configuration de FullCalendar
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('calendar');
 
     if (calendarEl) {
-        var calendar = new Calendar(calendarEl, {
-            plugins: [ dayGridPlugin, interactionPlugin ],
+        const calendar = new Calendar(calendarEl, {
+            plugins: [dayGridPlugin, interactionPlugin],
             initialView: 'dayGridMonth',
+            locale: frLocale,  // Utilisation de la locale française
             dateClick: function(info) {
-                var forfait = calendarEl.dataset.forfait; // Récupérer le forfait à partir de l'attribut data
+                const forfait = calendarEl.dataset.forfait;  // Récupérer le forfait à partir de l'attribut data
                 openBookingForm(info.dateStr, forfait);
             },
             events: '/bookings',
@@ -43,6 +45,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(html => {
                     document.getElementById('bookingFormContainer').innerHTML = html;
                     document.getElementById('bookingModal').style.display = 'block';
+
+                    // Ajouter la date dans un champ caché du formulaire
+                    const form = document.querySelector('#bookingForm');
+                    const hiddenDateInput = document.createElement('input');
+                    hiddenDateInput.type = 'hidden';
+                    hiddenDateInput.name = 'bookAt';
+                    hiddenDateInput.value = date + " 08:00:00"; // Ajouter l'heure fixe
+                    form.appendChild(hiddenDateInput);
+                    
+                    // Ajout d'un débogage
+                    console.log('Form data:', new FormData(form));
                 })
                 .catch(error => console.warn('Error fetching the form:', error));
         }
