@@ -38,6 +38,12 @@ class Booking
     #[ORM\OneToMany(targetEntity: Participants::class, mappedBy: 'booking', cascade: ['persist', 'remove'])]
     private Collection $participants;
 
+    #[ORM\Column]
+    private ?bool $isPaid = false;
+
+    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
+    private ?Invoice $invoice = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -134,6 +140,39 @@ class Booking
                 $participant->setBooking(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPaid(): ?bool
+    {
+        return $this->isPaid;
+    }
+
+    public function setIsPaid(bool $isPaid): static
+    {
+        $this->isPaid = $isPaid;
+
+        return $this;
+    }
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(?Invoice $invoice): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($invoice === null && $this->invoice !== null) {
+            $this->invoice->setBooking(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($invoice !== null && $invoice->getBooking() !== $this) {
+            $invoice->setBooking($this);
+        }
+
+        $this->invoice = $invoice;
 
         return $this;
     }

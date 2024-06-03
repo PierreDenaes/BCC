@@ -3,15 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Entity\Invoice;
 use App\Entity\Product;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BookingController extends AbstractController
 {
@@ -74,60 +75,77 @@ class BookingController extends AbstractController
     #[Route('/book', name: 'book', methods: ['GET', 'POST'])]
     public function book(Request $request, EntityManagerInterface $entityManager, BookingRepository $bookingRepository): Response
     {
-        $booking = new Booking(); // Crée une nouvelle réservation
-        $form = $this->createForm(BookingType::class, $booking); // Crée le formulaire
-        $form->handleRequest($request); // Gère la requête
- 
-        if ($form->isSubmitted() && $form->isValid()) { // Si le formulaire est soumis et valide
-            $product = $booking->getProduct(); // Récupère le produit sélectionné
+        $booking = new Booking();
+        $form = $this->createForm(BookingType::class, $booking);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $booking->getProduct();
 
             // Vérifions la date reçue
-            $date = $request->request->get('bookAt'); // Récupère la date
-            if (!$date) { // Si la date est manquante
-                return new JsonResponse(['error' => 'Date is missing.'], Response::HTTP_BAD_REQUEST); // Retourne une erreur
+            $date = $request->request->get('bookAt');
+            if (!$date) {
+                return new JsonResponse(['error' => 'Date is missing.'], Response::HTTP_BAD_REQUEST);
             }
 
-            $dateTime = new \DateTime($date); // Convertit la date en objet DateTime
-            $booking->setBookAt($dateTime); // Définit la date de réservation
+            $dateTime = new \DateTime($date);
+            $booking->setBookAt($dateTime);
 
             // Set start time to 8:00 AM for all bookings
-            $dateTime->setTime(8, 0); // Fixe l'heure à 8h00
-            $booking->setBookAt($dateTime); // Définit la date de réservation
+            $dateTime->setTime(8, 0);
+            $booking->setBookAt($dateTime);
 
-          
-            if ($product->getDuration() === Product::DURATION_HALF_DAY) { // Si la durée est une demi-journée
+            // Check period if duration is half day
+            if ($product->getDuration() === Product::DURATION_HALF_DAY) {
                 if ($booking->getPeriod() === null) {
-                    $booking->setPeriod('morning'); // Définit la période à matin par défaut
+                    $booking->setPeriod('morning'); // Default period
                 }
 
-                // Vérifie si la période est déjà réservée
-                $existingBookings = $bookingRepository->findBy([  // Recherche les réservations existantes
-                    'bookAt' => $dateTime,  // Recherche par date
-                    'period' => $booking->getPeriod(), // Recherche par période
+                // Check if the selected period is already booked
+                $existingBookings = $bookingRepository->findBy([
+                    'bookAt' => $dateTime,
+                    'period' => $booking->getPeriod(),
                 ]);
 
-                if (count($existingBookings) > 0) { // Si une réservation existe
-                    return new JsonResponse(['error' => 'La période selectionnée est déja réservée'], Response::HTTP_CONFLICT); // Retourne une erreur
+                if (count($existingBookings) > 0) {
+                    return new JsonResponse(['error' => 'The selected period is already booked.'], Response::HTTP_CONFLICT);
                 }
             } else {
-                $booking->setPeriod(null); // Réinitialise la période
+                $booking->setPeriod(null); // Clear period for full or multi-day bookings
             }
 
-            
+            // Set the profile from the logged in user
             $user = $this->getUser();
-            $profile = $user->getProfile(); // Récupère le profil de l'utilisateur
-            $booking->setProfile($profile); // Définit le profil de la réservation
+            $profile = $user->getProfile(); // Assurez-vous que la méthode getProfile existe dans votre entité User
+            $booking->setProfile($profile);
 
-            $entityManager->persist($booking); // Persiste la réservation
-            $entityManager->flush(); // Enregistre la réservation
+            // Calculer le montant de la facture
+            $price = $product->getTarifBase();
+            if ($booking->getIsGroup()) {
+                $participantCount = count($booking->getParticipants());
+                $price *= $participantCount;
+            }
 
-            return new JsonResponse(['success' => true], Response::HTTP_OK); // Retourne un succès
+            // Créer une facture
+            $invoice = new Invoice();
+            $invoice->setIssuedAt(new \DateTime());
+            $invoice->setBooking($booking);
+            $invoice->setAmount($price);
+            $booking->setInvoice($invoice);
+
+            $entityManager->persist($booking);
+            $entityManager->persist($invoice);
+            $entityManager->flush();
+
+            return new JsonResponse(['success' => true], Response::HTTP_OK);
         }
 
-        return $this->render('booking/book.html.twig', [ // Retourne la vue
+        return $this->render('booking/book.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+
+
 
 
     
