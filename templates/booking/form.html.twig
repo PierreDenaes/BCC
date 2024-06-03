@@ -4,11 +4,18 @@
         <h1>Formulaire de réservation</h1>
 
         {{ form_start(form, {'attr': {'id': 'bookingForm'}}) }}
-        {# {{ form_widget(form.bookAt) }} Champ caché bookAt #}
-        {{ form_widget(form.product) }}
-        {{ form_widget(form.period) }}
-        {{ form_widget(form.isGroup) }}
-        {{ form_widget(form.participants) }}
+        <div class="mb-3">
+            {{ form_widget(form.product, {'attr': {'id': 'product'}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_widget(form.period, {'attr': {'id': 'period'}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_widget(form.isGroup) }}
+        </div>
+        <div class="mb-3">
+            {{ form_widget(form.participants) }}
+        </div>
         <button class="btn">Réserver</button>
         {{ form_end(form) }}
 

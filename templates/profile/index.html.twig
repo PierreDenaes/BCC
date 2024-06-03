@@ -2,7 +2,16 @@
 
 {% block title %}Mon Profil
 {% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('profile') }}
+{% endblock %}
 
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('profile') }}
+
+{% endblock %}
 {% block body %}
 	<div class="container-fluid">
 		<h1>Mon Profil</h1>
