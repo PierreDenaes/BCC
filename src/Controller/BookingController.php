@@ -85,7 +85,7 @@ class BookingController extends AbstractController
             // Vérifions la date reçue
             $date = $request->request->get('bookAt');
             if (!$date) {
-                return new JsonResponse(['error' => 'Date is missing.'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(['error' => 'La date est manquante.'], Response::HTTP_BAD_REQUEST);
             }
 
             $dateTime = new \DateTime($date);
@@ -108,10 +108,19 @@ class BookingController extends AbstractController
                 ]);
 
                 if (count($existingBookings) > 0) {
-                    return new JsonResponse(['error' => 'The selected period is already booked.'], Response::HTTP_CONFLICT);
+                    return new JsonResponse(['error' => 'La période sélectionnée est déjà réservée.'], Response::HTTP_CONFLICT);
                 }
             } else {
-                $booking->setPeriod(null); // Clear period for full or multi-day bookings
+                // Vérifiez si les dates sélectionnées chevauchent une réservation existante
+            $endDateTime = clone $dateTime;
+            $endDateTime->modify('+1 days');
+
+            $existingBookings = $bookingRepository->findOverlappingBookings($dateTime, $endDateTime);
+
+            if (count($existingBookings) > 0) {
+                return new JsonResponse(['error' => 'Les dates sélectionnées chevauchent une réservation existante'], Response::HTTP_CONFLICT);
+            }
+                $booking->setPeriod(null); // Ne pas définir de période pour les réservations d'une journée ou plus
             }
 
             // Set the profile from the logged in user
