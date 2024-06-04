@@ -7,6 +7,7 @@ use App\Entity\Invoice;
 use App\Entity\Product;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
+use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ class BookingController extends AbstractController
     #[Route('/bookings', name: 'bookings')] 
     public function bookings(BookingRepository $bookingRepository): JsonResponse 
     {
-        $bookings = $bookingRepository->findAll(); // Récupère tous les enregistrements de la table Booking
+        $bookings = $bookingRepository->findBy(['isPaid' => true]); // Récupère tous les enregistrements de la table Booking payés
         $events = []; // Tableau pour stocker les événements
         foreach ($bookings as $booking) { // Parcours de tous les enregistrements
             $start = clone $booking->getBookAt(); // Clone la date de réservation
@@ -104,7 +105,8 @@ class BookingController extends AbstractController
                 }
                 $booking->setPeriod(null); // Ne pas définir de période pour les réservations d'une journée ou plus
             }
-            // Set the profile from the logged in user
+        
+            // Set les informations du profil de l'utilisateur connecté
             $user = $this->getUser();
             $profile = $user->getProfile(); // Assurez-vous que la méthode getProfile existe dans votre entité User
             $booking->setProfile($profile);
@@ -130,9 +132,22 @@ class BookingController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/pay', name: 'pay_invoice', methods: ['POST'])]
+    public function payInvoice(Request $request, EntityManagerInterface $entityManager, InvoiceRepository $invoiceRepository): Response
+    {
+        $invoiceId = $request->request->get('invoiceId');
+        $invoice = $invoiceRepository->find($invoiceId);
 
+        if ($invoice) {
+            $invoice->setPaidAt(new \DateTime());
+            $invoice->getBooking()->setIsPaid(true);
 
+            $entityManager->persist($invoice);
+            $entityManager->flush();
 
+            return new JsonResponse(['success' => true], Response::HTTP_OK);
+        }
 
-    
+        return new JsonResponse(['error' => 'Invoice not found.'], Response::HTTP_NOT_FOUND);
+    }
 }
