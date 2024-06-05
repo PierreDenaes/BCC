@@ -26,6 +26,9 @@ class Invoice
     #[ORM\Column(type: "decimal", precision: 10, scale: 2)]
     private ?float $amount = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $stripeSessionId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +74,17 @@ class Invoice
     public function setAmount(float $amount): self
     {
         $this->amount = $amount;
+        return $this;
+    }
+    public function getStripeSessionId(): ?string
+    {
+        return $this->stripeSessionId;
+    }
+
+    public function setStripeSessionId(?string $stripeSessionId): self
+    {
+        $this->stripeSessionId = $stripeSessionId;
+
         return $this;
     }
 }
