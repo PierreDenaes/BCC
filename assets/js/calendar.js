@@ -148,7 +148,6 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                 }
             }
 
-            
             togglePeriodField(); // Appeler la fonction pour initialiser l'affichage
 
             // Ajouter un écouteur d'événement pour le champ de produit
@@ -208,23 +207,39 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                     body: formData,
                 })
                 .then(response => response.json()) // Convertir la réponse en JSON
-                .then(data => { // Manipuler les données
+                .then(data => {
+                    console.log(data);
                     if (data.error) {
                         const errorContainer = document.getElementById('errorContainer');
-                        if (errorContainer) { // Vérifier si le conteneur d'erreur existe
+                        if (errorContainer) { 
                             errorContainer.innerHTML = data.error;
-                        } else { // Créer un conteneur d'erreur
+                        } else {
                             const errorDiv = document.createElement('div');
                             errorDiv.id = 'errorContainer';
                             errorDiv.style.color = 'red';
                             errorDiv.innerHTML = data.error;
                             form.prepend(errorDiv);
                         }
-                    } else { // Si aucune erreur
-                        document.getElementById('bookingModal').style.display = 'none';
-                        alert('Réservation effectuée avec succès!'); // Afficher une alerte
-                        // Reload the calendar events
-                        calendar.refetchEvents(); // Recharger les événements du calendrier
+                    } else { 
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            document.getElementById('bookingModal').style.display = 'none';
+                            alert('Afin de valider votre réservation, merci de procéder au paiement.');
+                
+                            // Appel AJAX pour créer la session de paiement et redirection
+                            fetch(`/create-checkout-session/${data.invoiceId}`)
+                                .then(response => response.json())
+                                .then(session => {
+                                    if (session.error) {
+                                        alert(session.error);
+                                    } else {
+                                        const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE'); // Utilise ta clé publique Stripe
+                                        stripe.redirectToCheckout({ sessionId: session.id });
+                                    }
+                                })
+                                .catch(error => console.warn('Error creating Stripe checkout session:', error));
+                        }
                     }
                 })
                 .catch(error => console.warn('Error submitting the form:', error)); // Afficher une alerte en cas d'erreur

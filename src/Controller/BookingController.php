@@ -125,7 +125,7 @@ class BookingController extends AbstractController
             $entityManager->persist($booking);
             $entityManager->persist($invoice);
             $entityManager->flush();
-            return new JsonResponse(['success' => true], Response::HTTP_OK);
+            return new JsonResponse(['success' => true,'invoiceId' => $invoice->getId()], Response::HTTP_OK);
         }
 
         return $this->render('booking/book.html.twig', [
