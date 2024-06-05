@@ -2,7 +2,8 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import frLocale from '@fullcalendar/core/locales/fr';  // Importation de la locale française
-import '../styles/bookform.scss';
+import '../styles/page/bookform.scss';
+import '../styles/page/modal.scss';
 
 let calendar; // Variable globale pour stocker l'instance du calendrier
 

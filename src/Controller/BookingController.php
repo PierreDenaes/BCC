@@ -20,7 +20,7 @@ class BookingController extends AbstractController
     #[Route('/bookings', name: 'bookings')] 
     public function bookings(BookingRepository $bookingRepository): JsonResponse 
     {
-        $bookings = $bookingRepository->findBy(['isPaid' => true]); // Récupère tous les enregistrements de la table Booking payés
+        $bookings = $bookingRepository->findAll(); // Récupère tous les enregistrements de la table Booking
         $events = []; // Tableau pour stocker les événements
         foreach ($bookings as $booking) { // Parcours de tous les enregistrements
             $start = clone $booking->getBookAt(); // Clone la date de réservation

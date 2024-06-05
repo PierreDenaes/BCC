@@ -1,11 +1,24 @@
-{# templates/payment/success.html.twig #}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Payment Success</title>
-</head>
-<body>
-    <h1>Payment Successful</h1>
-    <p>Your booking has been successfully paid for. Thank you!</p>
-</body>
-</html>
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('checkout') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('checkout') }}
+
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid payment-success-container">
+    <div class="payment-success-card">
+        <div class="payment-success-icon">
+            <i class="lni lni-checkmark-circle"></i>
+        </div>
+        <h1>Paiement Réussi</h1>
+        <p>Votre réservation a été payée avec succès. Merci !</p>
+        <a href="{{ path('book') }}" class="btn btn-blueboot">Retour à l'accueil</a>
+    </div>
+</div>
+{% endblock %}
