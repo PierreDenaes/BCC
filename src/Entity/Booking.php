@@ -18,6 +18,9 @@ class Booking
     #[ORM\Column(type: "datetime")]
     private ?\DateTimeInterface $bookAt = null;
 
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeInterface $createdAt = null;
+
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $period = null;
 
@@ -46,6 +49,7 @@ class Booking
 
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->participants = new ArrayCollection();
     }
 
@@ -174,6 +178,16 @@ class Booking
 
         $this->invoice = $invoice;
 
+        return $this;
+    }
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 }

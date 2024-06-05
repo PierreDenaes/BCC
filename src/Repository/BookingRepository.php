@@ -49,4 +49,14 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findUnpaidBookingsOlderThan(\DateTimeInterface $threshold): array
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.isPaid = false')
+            ->andWhere('b.createdAt < :threshold')
+            ->setParameter('threshold', $threshold)
+            ->getQuery()
+            ->getResult();
+    }
+
 }
