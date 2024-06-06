@@ -1,10 +1,10 @@
 <?php
 
+// src/Controller/PaymentController.php
 namespace App\Controller;
 
 use Stripe\Stripe;
 use Stripe\Webhook;
-use App\Entity\Invoice;
 use Stripe\Checkout\Session;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,14 +15,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class PaymentController extends AbstractController
 {
     private $logger;
+    private $mailer;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, MailerInterface $mailer)
     {
         $this->logger = $logger;
+        $this->mailer = $mailer;
     }
 
     #[Route('/create-checkout-session/{invoiceId}', name: 'create_checkout_session')]
@@ -34,7 +38,6 @@ class PaymentController extends AbstractController
             return new JsonResponse(['error' => 'Invoice not found.'], Response::HTTP_NOT_FOUND);
         }
         $productImageUrl = 'https://127.0.0.1:8000/images/bootcamps/' . $invoice->getBooking()->getProduct()->getBgName();
-        // $productImageUrl = 'https://i.postimg.cc/Vv6NRVnY/bootcamps-demie-journee-1200x628-min-66547a6688f95487792664.jpg';Test image
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
         $session = Session::create([
@@ -86,9 +89,7 @@ class PaymentController extends AbstractController
         $this->logger->info('Webhook received', ['payload' => $payload, 'signature' => $sig_header]);
 
         try {
-            $event = Webhook::constructEvent(
-                $payload, $sig_header, $endpoint_secret
-            );
+            $event = Webhook::constructEvent($payload, $sig_header, $endpoint_secret);
             $this->logger->info('Webhook event constructed', ['event' => $event]);
         } catch (\UnexpectedValueException $e) {
             $this->logger->error('Invalid payload', ['exception' => $e]);
@@ -116,7 +117,24 @@ class PaymentController extends AbstractController
                 $em->persist($booking);
                 $em->flush();
 
-                $this->logger->info('Invoice and booking updated', ['invoiceId' => $invoice->getId(), 'bookingId' => $booking->getId()]);
+                // Send email notifications
+                $this->sendEmail(
+                    $this->mailer,
+                    'contact@bootcampscenturio.com',
+                    $booking->getProfile()->getIdUser()->getEmail(),
+                    'Confirmation de réservation',
+                    '<p>Votre réservation a été confirmée.</p>'
+                );
+
+                $this->sendEmail(
+                    $this->mailer,
+                    'contact@bootcampscenturio.com',
+                    'pierre.contact@dnadaweb.fr',
+                    'Nouvelle réservation payée',
+                    '<p>Une nouvelle réservation a été payée.</p>'
+                );
+
+                $this->logger->info('Invoice and booking updated, email notifications sent', ['invoiceId' => $invoice->getId(), 'bookingId' => $booking->getId()]);
             } else {
                 $this->logger->error('Invoice not found', ['stripeSessionId' => $session->id]);
                 return new Response('Invoice not found', 404);
@@ -124,5 +142,16 @@ class PaymentController extends AbstractController
         }
 
         return new Response('Success', 200);
+    }
+
+    private function sendEmail(MailerInterface $mailer, string $from, string $to, string $subject, string $htmlContent): void
+    {
+        $email = (new Email())
+            ->from($from)
+            ->to($to)
+            ->subject($subject)
+            ->html($htmlContent);
+
+        $mailer->send($email);
     }
 }
