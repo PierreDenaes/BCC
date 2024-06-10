@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
+use App\Repository\GalleryRepository;
 use App\Repository\ProductRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SiteController extends AbstractController
 {
@@ -15,6 +16,15 @@ class SiteController extends AbstractController
         $products = $productRepository->findAll();
         return $this->render('site/index.html.twig', [
             'products' => $products,
+        ]);
+    }
+    #[Route('/gallery', name: 'gallery_index')]
+    public function pageGallery(GalleryRepository $galleryRepository): Response
+    {
+        $photos = $galleryRepository->findAll();
+
+        return $this->render('site/gallery.html.twig', [
+            'photos' => $photos,
         ]);
     }
 }

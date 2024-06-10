@@ -69,20 +69,25 @@
     </div> #}
 	</div>
 </div>
-<div class="container-fluid card-container">
+<div class="container-fluid card-container" id="productBootcamp">
 	<div class="swiper mySwiper mt-5">
 		<div class="swiper-wrapper mt-5">
 			{% for product in products %}
 				<div class="swiper-slide">
-					<div class="card m-auto shadow text-center" style="width: 16rem;">
+					<div class="card m-auto shadow text-center" style="width: 18rem;">
 						<img class="perso" src="{{ asset('images/bootcamps/' ~ product.imageName )}}" alt="image {{ product.forfait }}">
 						<img src="{{ asset('images/bootcamps/' ~ product.bgName )}}" class="card-img-top" alt="image {{ product.forfait }}">
 						<div class="card-body">
-							<h5 class="card-title">{{ product.forfait }}</h5>
-							<h6 class="card-subtitle mb-2 text-muted">{{ product.level }}</h6>
+							<h3 class="card-title">{{ product.forfait }}</h3>
+							<h4 class="card-subtitle mb-2 text-muted">- {{ product.level }} -</h4>
 							<p class="card-text">{{ product.description }}</p>
-							<a href="#" class="btn btn-blueboot positon-absolute d-block top-0">En savoir +</a>
+							<a href="{{ path('book')}}" class="btn btn-blueboot fw-bold">Réserver +</a>
+							
 						</div>
+						<div class="row gx-0">
+								<div class="bg-blueboot p-2 col-6 border-end border-white fw-bold"><p class="text-white">Tarif<br>{{ product.tarifBase }} € </p></div>
+								<div class="bg-blueboot p-2 col-6"><p class="text-white fw-bold">Environ<br> {{ product.duration }} heures </p></div>
+							</div>
 					</div>
 				</div>
 			{% endfor %}

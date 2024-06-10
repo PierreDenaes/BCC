@@ -117,13 +117,17 @@ class PaymentController extends AbstractController
                 $em->persist($booking);
                 $em->flush();
 
+                 // Generate email contents
+                $userEmailContent = $this->generateUserEmailContent($booking);
+                $adminEmailContent = $this->generateAdminEmailContent($booking);
+
                 // Send email notifications
                 $this->sendEmail(
                     $this->mailer,
                     'contact@bootcampscenturio.com',
                     $booking->getProfile()->getIdUser()->getEmail(),
                     'Confirmation de réservation',
-                    '<p>Votre réservation a été confirmée.</p>'
+                    $userEmailContent
                 );
 
                 $this->sendEmail(
@@ -131,8 +135,20 @@ class PaymentController extends AbstractController
                     'contact@bootcampscenturio.com',
                     'pierre.contact@dnadaweb.fr',
                     'Nouvelle réservation payée',
-                    '<p>Une nouvelle réservation a été payée.</p>'
+                    $adminEmailContent
                 );
+
+                // Send email notifications to participants
+                foreach ($booking->getParticipants() as $participant) {
+                    $participantEmailContent = $this->generateParticipantEmailContent($participant, $booking);
+                    $this->sendEmail(
+                        $this->mailer,
+                        'contact@bootcampscenturio.com',
+                        $participant->getEmail(),
+                        'Vous avez été ajouté à une réservation',
+                        $participantEmailContent
+                    );
+                }
 
                 $this->logger->info('Invoice and booking updated, email notifications sent', ['invoiceId' => $invoice->getId(), 'bookingId' => $booking->getId()]);
             } else {
@@ -154,4 +170,64 @@ class PaymentController extends AbstractController
 
         $mailer->send($email);
     }
+    private function generateUserEmailContent($booking): string
+    {
+        $profile = $booking->getProfile();
+        $product = $booking->getProduct();
+        $amount = $booking->getInvoice()->getAmount();
+        $date = $booking->getCreatedAt()->format('d/m/Y');
+
+        return "
+            <p>Bonjour {$profile->getFirstName()},</p>
+            <p>Votre réservation a été confirmée. Voici les détails de votre réservation :</p>
+            <ul>
+                <li>Produit: {$product->getForfait()}</li>
+                <li>Descriptif: {$product->getDescription()}</li>
+                <li>Date: {$date}</li>
+                <li>Montant: {$amount} €</li>
+            </ul>
+            <p>Merci de votre confiance.</p>
+            <p>BootCamps Centurio</p>
+        ";
+    }
+    private function generateAdminEmailContent($booking): string
+    {
+        $user = $booking->getProfile()->getIdUser();
+        $profile = $booking->getProfile();
+        $product = $booking->getProduct();
+        $amount = $booking->getInvoice()->getAmount();
+        $date = $booking->getCreatedAt()->format('d/m/Y');
+        $userEmail = $user->getEmail();
+        $userPhone = $profile->getPhoneNumber(); // Assurez-vous que la méthode getPhoneNumber() existe
+
+        return "
+            <p>Une nouvelle réservation a été payée. Voici les détails :</p>
+            <ul>
+                <li>Produit: {$product->getForfait()}</li>
+                <li>Date: {$date}</li>
+                <li>Montant: {$amount} €</li>
+                <li>Email de l'utilisateur: {$userEmail}</li>
+                <li>Téléphone de l'utilisateur: {$userPhone}</li>
+            </ul>
+            <p>BootCamps Centurio</p>
+        ";
+    }
+    private function generateParticipantEmailContent($participant, $booking): string
+    {
+        $product = $booking->getProduct();
+        $date = $booking->getCreatedAt()->format('d/m/Y');
+
+        return "
+            <p>Bonjour {$participant->getName()},</p>
+            <p>Vous avez été ajouté à une réservation. Voici les détails de la réservation :</p>
+            <ul>
+                <li>Produit: {$product->getForfait()}</li>
+                <li>Descriptif: {$product->getDescription()}</li>
+                <li>Date: {$date}</li>
+            </ul>
+            <p>Merci.</p>
+            <p>BootCamps Centurio</p>
+        ";
+    }
+
 }

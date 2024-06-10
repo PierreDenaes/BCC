@@ -37,7 +37,7 @@ class CleanupBookingsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $now = new \DateTime();
-        $threshold = $now->modify('-10 minutes');
+        $threshold = $now->modify('-1 minutes');
 
         $bookings = $this->bookingRepository->findUnpaidBookingsOlderThan($threshold);
 

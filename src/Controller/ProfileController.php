@@ -42,4 +42,40 @@ class ProfileController extends AbstractController
             'profile' => $profile,
         ]);
     }
+    #[Route('/profile/edit', name: 'app_profile_edit')]
+    public function edit(Request $request, EntityManagerInterface $em, UserInterface $user): Response
+    {
+        $profile = $user->getProfile();
+
+        if (!$profile) {
+            return $this->redirectToRoute('app_profile_new');
+        }
+
+        $form = $this->createForm(ProfileType::class, $profile);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        return $this->render('profile/edit.html.twig', [
+            'form' => $form->createView(),
+            'profile' => $profile,
+        ]);
+    }
+
+    #[Route('/profile/delete', name: 'app_profile_delete')]
+    public function delete(Request $request, EntityManagerInterface $em, UserInterface $user): Response
+    {
+        $profile = $user->getProfile();
+
+        if ($profile && $this->isCsrfTokenValid('delete'.$profile->getId(), $request->request->get('_token'))) {
+            $em->remove($profile);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_home');
+    }
 }

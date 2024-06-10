@@ -1,19 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Profil
+{% block title %}
+    {% if app.request.attributes.get('_route') == 'app_profile_new' %}
+        Créer un Profil
+    {% else %}
+        Modifier le Profil
+    {% endif %}
 {% endblock %}
+
 {% block stylesheets %}
-	{{ parent() }}
-	{{ encore_entry_link_tags('profile') }}
+    {{ parent() }}
+    {{ encore_entry_link_tags('profile') }}
 {% endblock %}
 
 {% block javascripts %}
-	{{ parent() }}
-	{{ encore_entry_script_tags('profile') }}
-
+    {{ parent() }}
+    {{ encore_entry_script_tags('profile') }}
 {% endblock %}
+
 {% block body %}
-	<div class="container-fluid">
+    <div class="container-fluid">
 		<div class="wrapper d-flex align-items-stretch row gx-0 pe-4">
 			<nav id="sidebarUser" class="col-3">
 				<div class="p-4">
@@ -81,10 +87,21 @@
 
 
 			<!-- ... le reste de votre code ... -->
-			<div id="dynamicContent" class="p-4 p-md-5 mt-4 border col-9"></div>
-
+			<div id="dynamicContent" class="p-4 p-md-5 mt-4 border col-9">
+                <h1 class="text-center mb-4">Modifier le Profil</h1>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 col-lg-6">
+                        {{ form_start(form) }}
+                            {{ form_widget(form) }}
+                            <button type="submit" class="btn btn-blueboot w-100 mt-3">                       
+                                    Mettre à jour
+                            </button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+                
+        
 		</div>
 	</div>
-
-
 {% endblock %}

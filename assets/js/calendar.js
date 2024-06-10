@@ -36,6 +36,13 @@ function initializeCalendar() {
                 const selectedDate = info.dateStr.split('T')[0]; // Extraire la date
                 const forfait = calendarEl.dataset.forfait;  // Récupérer le forfait à partir de l'attribut data
 
+                // Vérifier si la date est passée ou est aujourd'hui
+                const today = new Date().toISOString().split('T')[0];
+                if (selectedDate <= today) {
+                    alert("Les réservations pour aujourd'hui ou les dates passées ne sont pas autorisées.");
+                    return;
+                }
+
                 if (!reservedDates.includes(selectedDate)) { // Vérifier si la date est réservée
                     openBookingForm(info.dateStr, forfait); // Ouvrir le formulaire de réservation
                 } else if (reservedHalfDays[selectedDate] && reservedHalfDays[selectedDate].length < 2) { // Vérifier si une demi-journée est disponible
@@ -98,6 +105,12 @@ function initializeCalendar() {
             selectable: true, // Activer la sélection
             selectAllow: function(selectInfo) { // Autoriser la sélection
                 const selectedDate = selectInfo.startStr.split('T')[0]; // Extraire la date sélectionnée
+
+                // Vérifier si la date est passée ou est aujourd'hui
+                const today = new Date().toISOString().split('T')[0];
+                if (selectedDate <= today) {
+                    return false; // Empêcher la sélection des dates passées ou d'aujourd'hui
+                }
 
                 if (reservedDates.includes(selectedDate)) { // Vérifier si la date est réservée
                     return false; // Empêcher la sélection

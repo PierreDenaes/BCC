@@ -7,14 +7,15 @@ use App\Entity\Invoice;
 use App\Entity\Product;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
-use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_USER')]
 class BookingController extends AbstractController
 {
     #[Route('/bookings', name: 'bookings')] 
@@ -132,22 +133,5 @@ class BookingController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    #[Route('/pay', name: 'pay_invoice', methods: ['POST'])]
-    public function payInvoice(Request $request, EntityManagerInterface $entityManager, InvoiceRepository $invoiceRepository): Response
-    {
-        $invoiceId = $request->request->get('invoiceId');
-        $invoice = $invoiceRepository->find($invoiceId);
-
-        if ($invoice) {
-            $invoice->setPaidAt(new \DateTime());
-            $invoice->getBooking()->setIsPaid(true);
-
-            $entityManager->persist($invoice);
-            $entityManager->flush();
-
-            return new JsonResponse(['success' => true], Response::HTTP_OK);
-        }
-
-        return new JsonResponse(['error' => 'Invoice not found.'], Response::HTTP_NOT_FOUND);
-    }
+   
 }
