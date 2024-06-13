@@ -6,8 +6,25 @@
 #bookingForm legend {
     display: none;
 }
-.long-event {
-    background-color: #ff0000 !important; /* Couleur de fond rouge */
-    border-color: #ff0000 !important; /* Couleur de bordure rouge */
+.long-event, .fc-daygrid-event {
+    background-color: #235681!important; 
+    border-color: #235681 !important; 
     color: #ffffff !important; /* Couleur du texte en blanc pour une meilleure lisibilité */
 }
+.fc-daygrid-day-number, .fc-col-header-cell-cushion{
+    color: #235681 !important; /* Couleur du texte en rouge */
+    font-weight: bold;
+}
+.fc-dayGridMonth-view{
+    box-shadow: 0 .5rem 1rem rgba(#000, .15);
+}
+.fc .fc-button-primary{
+    box-shadow: 0 .5rem 1rem rgba(#000, .15);
+    background-color: #235681 !important;
+    border-color: #235681 !important;
+}
+.fc .fc-daygrid-day.fc-day-today{
+    background-color: rgba(35, 86, 129, 0.2)!important;
+    color: #ffffff !important;
+}
+

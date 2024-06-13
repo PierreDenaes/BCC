@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(
     name: 'app:cleanup-bookings',
-    description: 'Supprime les réservations non payées après 30 minutes.',
+    description: 'Supprime les réservations non payées après 6 minutes.',
 )]
 class CleanupBookingsCommand extends Command
 {
@@ -29,7 +29,7 @@ class CleanupBookingsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Supprime les réservations non payées après 30 minutes');
+            ->setDescription('Supprime les réservations non payées après 6 minutes');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -37,7 +37,7 @@ class CleanupBookingsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $now = new \DateTime();
-        $threshold = $now->modify('-1 minutes');
+        $threshold = $now->modify('-6 minutes');
 
         $bookings = $this->bookingRepository->findUnpaidBookingsOlderThan($threshold);
 

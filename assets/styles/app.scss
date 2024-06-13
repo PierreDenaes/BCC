@@ -1,10 +1,12 @@
-@import "variables";
-@import "menu";
-@import "bootcard";
-@import "accueil";
+@import "_variables.scss";
+@import "_menu.scss";
+
+
+
 
 .container-fluid {
     padding-left: 80px !important;
 }
-@import "~swiper/swiper-bundle.css";
+
+
 @import "~bootstrap/scss/bootstrap";
