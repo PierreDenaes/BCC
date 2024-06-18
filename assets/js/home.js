@@ -21,3 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+document.querySelector('.arrow').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.querySelector('#accueilInstructor').scrollIntoView({
+        behavior: 'smooth'
+    });
+});

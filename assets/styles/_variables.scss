@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'Nba-kings';
+    src: url('font/NBA-Kings-1.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 $theme-colors: (
     "blueboot" : darken(#428bca, 20%),
     "white": #fff,

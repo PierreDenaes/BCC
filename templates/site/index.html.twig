@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Accueil
+{% endblock %}
 {% block stylesheets %}
 	{{ parent() }}
 	{{ encore_entry_link_tags('home') }}
@@ -14,101 +15,141 @@
 {% endblock %}
 
 {% block body %}
-	<div class=" vh-100" id="home">{# <div class="container-fluid" id="accueil">
+	<div class="text-center vh-100" id="home">
+		<div class="arrow-container">
+        <a href="#accueilBoot" class="arrow">
+            <i class="lni lni-angle-double-down"></i>
+        </a>
+    </div>
+		{# <div class="container-fluid" id="accueil">
+												<div class="row gx-0">
+													<div class="col-lg-8 mx-auto">
+														<p class="textAccueil">
+															Bienvenue sur BOOTCAMPSCENTURIO : l'aventure rencontre la discipline, où le dépassemnt de soi devient un mode de vie. Plongez dans un monde où l'esprit militaire s'allie à la camaraderie, pour offrir des expériences inoubliables à tous.
+															<br>
+															Que vous soyez un particulier en quête d'une aventure excitante, une entreprise cherchant à renforcer la cohésion d'équipe, ou une collectivité à la recherche d'une activité unique pour vos membres, nous avons des bootcamps adaptés à vos besoins.
+															<br>
+															Nos bootcamps offrent des défis exaltants conçus pour tous les niveaux, transformant chauqe obstacle en opportunité de grandir et de se surpasser. Embarquez pour une aventure stimulante au coeur de la nature, guidés par notre équipe d'experts pour une expérience sûre et mémorable.
+															<br>
+															<strong>Pourquoi choisir BOOTCAMPSCENTURIO ?</strong>
+															<br>
+															<strong>. Pour les particuliers</strong>
+															: Vivez des aventures uniques et formez des liens forts avec vos amis lors de nos EVG et EVJF.
+															<br>
+															<strong>. Pour les entreprises</strong>
+															: Renforcez l'esprit d'équipe et la cohésion lors de nos team buildings dynamiques.
+															<br>
+															<strong>. Pour les collectivités</strong>
+															: Offrez des expériences passionnantes à vos menbres, des associations sportives aux centes de loisirs.
+															<br>
+															Rejoignez notre communauté de guerriers modernes, prêts à relever les défis, forger des souvenirs et célébrer les victoires ensemble. Réservez votre expérience BOOTCAMPSCENTURIO dès aujourdhui.
+															<br>
+															<strong>Prêt à relever le défi et à devenir le "centurio" de votre propre aventure ?</strong>
+															Inscrivez-vous maintenant !
+														</p>
+													</div>
+												</div>
+											</div> #}
+	</div>
+	<section class="container-fluid py-5" id="accueilInstructor">
+		<h1 class="text-center mt-2 mb-4 white-stroke">Bienvenue chez BOOTCAMPS CENTURIO !</h1>
+		<p class="text-center lead px-5 mb-4 white-stroke">L'aventure rencontre la discipline, où le dépassement de soi devient un mode de vie. Plongez dans un monde où l'esprit militaire s'allie à la camaraderie, pour offrir des expériences inoubliables à tous. Découvrez des aventures palpitantes et des défis stimulants avec nos programmes de bootcamp. Que vous soyez un particulier ou une entreprise, nos stages sont conçus pour vous pousser au-delà de vos limites et renforcer votre esprit d'équipe.</p>
+	
+		<div class="row p-2 p-xl-5 gx-0">
+			<div class="col-lg-6 p-3 p-xl-5 bg-white bg-opacity-75 rounded shadow">
+				<h2 class="text-center h1 mb-4">Rencontrez notre Instructeur Expert</h2>
+            <p>
+                Avec plus de 20 ans d'expérience dans l'armée de terre, Moussa Camara est un expert renommé en survie, en stratégies de combat et en entraînement physique intensif. Sa passion pour l'aventure et son dévouement à transmettre ses connaissances font de lui le guide parfait pour vos aventures en bootcamp. Toujours prêt à relever de nouveaux défis, Moussa inspire chaque participant à repousser ses limites et à développer une résilience hors du commun.
+            </p>
+            <p>
+                Grâce à son expérience extensive et à son approche pédagogique unique, Moussa a aidé de nombreux participants à transformer leurs vies. Son expertise couvre une gamme de compétences essentielles pour la survie et la performance dans des conditions extrêmes. Que ce soit dans la jungle, le désert ou en milieu urbain, il sait adapter ses techniques pour maximiser l'efficacité et la sécurité.
+            </p>
+            <p>
+                En plus de ses compétences techniques, Moussa est également un mentor dévoué. Il s'efforce de développer l'état d'esprit nécessaire pour surmonter les obstacles et atteindre des objectifs ambitieux. Sa philosophie de l'entraînement va au-delà de la simple préparation physique; il encourage une croissance personnelle complète, intégrant la force mentale et la résilience émotionnelle.
+            </p>
+            <div class="text-center mt-5">
+                <a href="#" class="btn btn-blueboot fs-5 border border-2 fw-bold shadow">Nous Contacter</a>
+            </div>
+			</div>
+			<div class="col-lg-6 text-center">
+			<img src="{{ asset('images/avatars/moussa-avatar.jpg') }}" alt="avatar moussa intructeur bootcamps centurio" class="mb-4 rounded-circle avatar p-4 p-xl-5">
+			<h2 class="text-white fw-bold h1 mt-4" id="moussa">🫵🏽🎖️MOUSSA CAMARA🎖️🫵🏽</h2>
+			</div>
+		</div>
+	</section>
+	<section class="container-fluid py-5 bg-black text-white" id="accueilBootcamp">
+		<h2 class="text-center mt-2 mb-4">Choisissez parmi 3 formules</h2>
+		<p class="text-center lead px-5 mb-4">L'aventure rencontre la discipline, où le dépassement de soi devient un mode de vie. Plongez dans un monde où l'esprit militaire s'allie à la camaraderie, pour offrir des expériences inoubliables à tous. Découvrez des aventures palpitantes et des défis stimulants avec nos programmes de bootcamp. Que vous soyez un particulier ou une entreprise, nos stages sont conçus pour vous pousser au-delà de vos limites et renforcer votre esprit d'équipe.</p>
+	</section>
+	<section class="container-fluid p-5 card-container" id="desktopHomeView">
+		<div class="row gx-0 py-5">
+			{% for product in products %}
+				<div class="col-lg-4">
+					<div class="card m-auto shadow text-center" style="width: 18rem;">
+						<img class="perso" src="{{ asset('images/bootcamps/' ~ product.imageName )}}" alt="image {{ product.forfait }}">
+						<img src="{{ asset('images/bootcamps/' ~ product.bgName )}}" class="card-img-top" alt="image {{ product.forfait }}">
+						<div class="card-body">
+							<h3 class="card-title">{{ product.forfait }}</h3>
+							<h4 class="card-subtitle mb-2 text-muted">-
+								{{ product.level }}
+								-</h4>
+							<p class="card-text">{{ product.description }}</p>
+							<a href="{{ path('book')}}" class="btn btn-blueboot fw-bold">Réserver +</a>
+
+						</div>
 						<div class="row gx-0">
-							<div class="col-lg-8 mx-auto">
-								<p class="textAccueil">
-									Bienvenue sur BOOTCAMPSCENTURIO : l'aventure rencontre la discipline, où le dépassemnt de soi devient un mode de vie. Plongez dans un monde où l'esprit militaire s'allie à la camaraderie, pour offrir des expériences inoubliables à tous.
-									<br>
-									Que vous soyez un particulier en quête d'une aventure excitante, une entreprise cherchant à renforcer la cohésion d'équipe, ou une collectivité à la recherche d'une activité unique pour vos membres, nous avons des bootcamps adaptés à vos besoins.
-									<br>
-									Nos bootcamps offrent des défis exaltants conçus pour tous les niveaux, transformant chauqe obstacle en opportunité de grandir et de se surpasser. Embarquez pour une aventure stimulante au coeur de la nature, guidés par notre équipe d'experts pour une expérience sûre et mémorable.
-									<br>
-									<strong>Pourquoi choisir BOOTCAMPSCENTURIO ?</strong>
-									<br>
-									<strong>. Pour les particuliers</strong>
-									: Vivez des aventures uniques et formez des liens forts avec vos amis lors de nos EVG et EVJF.
-									<br>
-									<strong>. Pour les entreprises</strong>
-									: Renforcez l'esprit d'équipe et la cohésion lors de nos team buildings dynamiques.
-									<br>
-									<strong>. Pour les collectivités</strong>
-									: Offrez des expériences passionnantes à vos menbres, des associations sportives aux centes de loisirs.
-									<br>
-									Rejoignez notre communauté de guerriers modernes, prêts à relever les défis, forger des souvenirs et célébrer les victoires ensemble. Réservez votre expérience BOOTCAMPSCENTURIO dès aujourdhui.
-									<br>
-									<strong>Prêt à relever le défi et à devenir le "centurio" de votre propre aventure ?</strong>
-									Inscrivez-vous maintenant !
+							<div class="bg-blueboot p-2 col-6 border-end border-white fw-bold">
+								<p class="text-white">Tarif<br>{{ product.tarifBase }}
+									€
+								</p>
+							</div>
+							<div class="bg-blueboot p-2 col-6">
+								<p class="text-white fw-bold">Environ<br>
+									{{ product.duration }}
+									heures
 								</p>
 							</div>
 						</div>
-					</div> #}
-	</div>
-	{# <div class="container-fluid p-5 card-container">
-			<div class="row gx-0">
-	        {% for product in products %}
-	            {% if loop.index <= 2 %}
-	                <div class="col-lg-6 ps-2 mb-4">
-	                    <div class="card shadow text-center h-100 m-auto" style="width: 20rem;">
-	                        <img class="perso" src="{{ asset('images/bootcamps/' ~ product.imageName )}}" alt="image {{ product.forfait }}">
-	                        <img src="{{ asset('images/bootcamps/' ~ product.bgName )}}" class="card-img-top" alt="image {{ product.forfait }}">
-	                        <div class="card-body">
-	                            <h5 class="card-title">{{ product.forfait }}</h5>
-	                            <h6 class="card-subtitle mb-2 text-muted">{{ product.level }}</h6>
-	                            <p class="card-text mb-5 text-center px-4">{{ product.description }}</p>
-	                            <a href="#" class="btn btn-primary card-button">En savoir +</a>
-	                        </div>
-	                    </div>
-	                </div>
-	            {% elseif loop.index == 3 %}
-	                <div class="col-lg-6 ps-2 mb-4 mx-auto">
-	                    <div class="card shadow text-center h-100 m-auto" style="width: 22rem;">
-	                        <img class="perso" src="{{ asset('images/bootcamps/' ~ product.imageName )}}" alt="image {{ product.forfait }}">
-	                        <img src="{{ asset('images/bootcamps/' ~ product.bgName )}}" class="card-img-top" alt="image {{ product.forfait }}">
-	                        <div class="card-body">
-	                            <h5 class="card-title">{{ product.forfait }}</h5>
-	                            <h6 class="card-subtitle mb-2 text-muted">{{ product.level }}</h6>
-	                            <p class="card-text mb-5 text-center px-4">{{ product.description }}</p>
-	                            <a href="#" class="btn btn-primary card-button">En savoir +</a>
-	                        </div>
-	                    </div>
-	                </div>
-	            {% endif %}
-	        {% endfor %}
-	    </div> #}
-</div></div><div class="container-fluid card-container" id="productBootcamp">
-<div class="swiper mySwiper mt-5">
-	<div class="swiper-wrapper mt-5">
-		{% for product in products %}
-			<div class="swiper-slide">
-				<div class="card m-auto shadow text-center" style="width: 18rem;">
-					<img class="perso" src="{{ asset('images/bootcamps/' ~ product.imageName )}}" alt="image {{ product.forfait }}">
-					<img src="{{ asset('images/bootcamps/' ~ product.bgName )}}" class="card-img-top" alt="image {{ product.forfait }}">
-					<div class="card-body">
-						<h3 class="card-title">{{ product.forfait }}</h3>
-						<h4 class="card-subtitle mb-2 text-muted">-
-							{{ product.level }}
-							-</h4>
-						<p class="card-text">{{ product.description }}</p>
-						<a href="{{ path('book')}}" class="btn btn-blueboot fw-bold">Réserver +</a>
-
-					</div>
-					<div class="row gx-0">
-						<div class="bg-blueboot p-2 col-6 border-end border-white fw-bold">
-							<p class="text-white">Tarif<br>{{ product.tarifBase }}
-								€
-							</p>
-						</div>
-						<div class="bg-blueboot p-2 col-6">
-							<p class="text-white fw-bold">Environ<br>
-								{{ product.duration }}
-								heures
-							</p>
-						</div>
 					</div>
 				</div>
+			{% endfor %}
+		</div>
+	</section>
+	<section class="container-fluid card-container" id="smartHomeView">
+		<div class="swiper mySwiper mt-5">
+			<div class="swiper-wrapper mt-5">
+				{% for product in products %}
+					<div class="swiper-slide">
+						<div class="card m-auto shadow text-center" style="width: 18rem;">
+							<img class="perso" src="{{ asset('images/bootcamps/' ~ product.imageName )}}" alt="image {{ product.forfait }}">
+							<img src="{{ asset('images/bootcamps/' ~ product.bgName )}}" class="card-img-top" alt="image {{ product.forfait }}">
+							<div class="card-body">
+								<h3 class="card-title">{{ product.forfait }}</h3>
+								<h4 class="card-subtitle mb-2 text-muted">-
+									{{ product.level }}
+									-</h4>
+								<p class="card-text">{{ product.description }}</p>
+								<a href="{{ path('book')}}" class="btn btn-blueboot fw-bold">Réserver +</a>
+
+							</div>
+							<div class="row gx-0">
+								<div class="bg-blueboot p-2 col-6 border-end border-white fw-bold">
+									<p class="text-white">Tarif<br>{{ product.tarifBase }}
+										€
+									</p>
+								</div>
+								<div class="bg-blueboot p-2 col-6">
+									<p class="text-white fw-bold">Environ<br>
+										{{ product.duration }}
+										heures
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
 			</div>
-		{% endfor %}
-	</div>
-	<div class="swiper-pagination"></div>
-</div></div>{% endblock %}
+			<div class="swiper-pagination"></div>
+		</div>
+	</section>
+{% endblock %}
