@@ -5,7 +5,7 @@
     transition: all 0.25s ease-in-out;
     display: flex;
     flex-direction: column;
-    background-color: rgba(15, 16, 17, 0.6);
+    background-color: rgba(15, 16, 17, 0.7);
     position: fixed;
     &.expand {
         width: 260px;
@@ -13,6 +13,9 @@
     &:not(.expand) .sidebar-logo,
     &:not(.expand) .sidebar-link span {
         display: none;
+    }
+    #toggle-btn {
+        background-color: #000;
     }
     .sidebar-nav {
         list-style-type: none;
