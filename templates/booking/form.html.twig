@@ -1,18 +1,18 @@
 {# templates/booking/form.html.twig #}
 {% block modal %}
-    <div class="container-fluid">
+    <div class="col-8">
         <h1>Formulaire de réservation</h1>
         {{ form_start(form, {'attr': {'id': 'bookingForm'}}) }}
         <div class="mb-3">
-            {{ form_widget(form.product, {'attr': {'id': 'booking_product'}}) }}
+            {{ form_row(form.product, {'attr': {'id': 'booking_product'}}) }}
         </div>
         <div class="mb-3">
-            {{ form_widget(form.period, {'attr': {'id': 'booking_period'}}) }}
+            {{ form_row(form.period, {'attr': {'id': 'booking_period'}}) }}
         </div>
         <div class="mb-3">
-            {{ form_widget(form.isGroup, {'attr': {'id': 'booking_isGroup'}}) }}
+            {{ form_row(form.nbrParticipant, {'attr': {'id': 'booking_nbrParticipant'}}) }}
         </div>
-        <div class="mb-3" id="participantsContainer" style="display: none;">
+        <div class="mb-3" id="participantsContainer">
             <ul id="participant-list" data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
                 {% for participant in form.participants %}
                     <li>

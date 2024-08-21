@@ -24,9 +24,6 @@ class Booking
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $period = null;
 
-    #[ORM\Column]
-    private ?bool $isGroup = null;
-
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
@@ -46,6 +43,9 @@ class Booking
 
     #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
     private ?Invoice $invoice = null;
+
+    #[ORM\Column]
+    private ?int $nbrParticipant = null;
 
     public function __construct()
     {
@@ -78,18 +78,6 @@ class Booking
     public function setPeriod(?string $period): static
     {
         $this->period = $period;
-
-        return $this;
-    }
-
-    public function getIsGroup(): ?bool
-    {
-        return $this->isGroup;
-    }
-
-    public function setIsGroup(bool $isGroup): static
-    {
-        $this->isGroup = $isGroup;
 
         return $this;
     }
@@ -188,6 +176,18 @@ class Booking
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getNbrParticipant(): ?int
+    {
+        return $this->nbrParticipant;
+    }
+
+    public function setNbrParticipant(int $nbrParticipant): static
+    {
+        $this->nbrParticipant = $nbrParticipant;
+
         return $this;
     }
 }

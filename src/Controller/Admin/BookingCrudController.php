@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 
 class BookingCrudController extends AbstractCrudController
 {
@@ -27,7 +28,7 @@ class BookingCrudController extends AbstractCrudController
             DateTimeField::new('bookAt')->setLabel('Date de réservation'),
             DateTimeField::new('createdAt')->setLabel('Date de création')->hideOnForm(),
             TextField::new('period')->setLabel('Période'),
-            BooleanField::new('isGroup')->setLabel('Est un groupe'),
+            IntegerField::new('nbrParticipant')->setLabel('Nombre de participants (min 6)'),
             AssociationField::new('product')->setLabel('Produit'),
             AssociationField::new('profile')->setLabel('Profil'),
             BooleanField::new('isPaid')->setLabel('Est payé'),
@@ -68,7 +69,7 @@ class BookingCrudController extends AbstractCrudController
             ->add('createdAt')
             ->add('product')
             ->add('period')
-            ->add('isGroup')
+            ->add('nbrParticipant')
             ->add('isPaid');
     }
 }

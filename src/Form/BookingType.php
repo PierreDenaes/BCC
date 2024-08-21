@@ -11,6 +11,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class BookingType extends AbstractType
 {
@@ -19,7 +21,7 @@ class BookingType extends AbstractType
         $builder
             ->add('product', EntityType::class, [
                 'class' => Product::class,
-                'choice_label' => 'forfait',
+                'label' => 'Choisir un forfait',
             ])
             ->add('period', ChoiceType::class, [
                 'choices' => [
@@ -27,11 +29,15 @@ class BookingType extends AbstractType
                     'Après-midi' => 'afternoon',
                 ],
                 'required' => false,
-                'placeholder' => 'Sélectionnez une période',
+                'label' => 'Sélectionnez une période',
             ])
-            ->add('isGroup', CheckboxType::class, [
-                'label' => 'Est-ce une réservation de groupe?',
-                'required' => false,
+            ->add('nbrParticipant', IntegerType::class, [
+                'label' => 'Nombre de participants (min 6)',
+                'required' => true,
+                'attr' => [
+                    'min' => 6,
+                    'value' => 6
+                ],
             ])
             ->add('participants', CollectionType::class, [
                 'entry_type' => ParticipantType::class,

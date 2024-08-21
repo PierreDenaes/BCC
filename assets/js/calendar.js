@@ -152,6 +152,10 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
             // Initialiser les champs
             const periodField = document.getElementById('booking_period').closest('.mb-3'); // Sélectionner le champ de période
             const productField = document.getElementById('booking_product'); // Sélectionner le champ de produit
+            const nbrParticipantField = document.getElementById('booking_nbrParticipant'); // Sélectionner le champ du nombre de participants
+            const participantList = document.getElementById('participant-list'); // Sélectionner le conteneur des participants
+            const addParticipantButton = document.getElementById('add-participant'); // Bouton pour ajouter des participants
+            let index = participantList.children.length; // Initialiser l'index des participants
 
             // Fonction pour basculer la visibilité du champ de période
             function togglePeriodField() { // Fonction pour basculer la visibilité du champ de période
@@ -175,44 +179,56 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                 }
             }
 
-            // Gérer l'affichage des participants
-            const isGroupCheckbox = document.getElementById('booking_isGroup');
-            const participantsContainer = document.getElementById('participantsContainer');
-            const participantList = document.getElementById('participant-list');
-            const addParticipantButton = document.getElementById('add-participant');
-            let index = participantList.children.length;
-
-            function toggleParticipantsContainer() { // Fonction pour basculer la visibilité du conteneur de participants
-                if (isGroupCheckbox.checked) {
-                    participantsContainer.style.display = '';
-                } else {
-                    participantsContainer.style.display = 'none';
+            // Fonction pour ajouter des champs de participants
+            function addParticipantFields(count) {
+                while (participantList.children.length < count) {
+                    let newLi = document.createElement('li');
+                    let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
+                    newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                    participantList.appendChild(newLi);
                 }
             }
 
-            // Initial check
-            toggleParticipantsContainer(); // Appeler la fonction pour initialiser l'affichage
+            // Ajouter les 6 participants minimum dès le départ
+            addParticipantFields(6);
 
-            // Add event listener
-            isGroupCheckbox.addEventListener('change', toggleParticipantsContainer); // Ajouter un écouteur d'événement pour le champ de groupe
+            // Fonction pour ajuster le nombre de participants
+            function adjustParticipants() {
+                const count = parseInt(nbrParticipantField.value);
+                if (count >= 6) {
+                    addParticipantFields(count);
+                    // Supprimer les participants supplémentaires si le nombre de participants est réduit
+                    while (participantList.children.length > count) {
+                        participantList.removeChild(participantList.lastChild);
+                    }
+                }
+            }
 
-            // Add participant
-            addParticipantButton.addEventListener('click', () => { // Ajouter un écouteur d'événement pour le bouton d'ajout de participant
-                let newLi = document.createElement('li'); // Créer un élément li
-                let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++); // Remplacer le placeholder __name__ par l'index
-                newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>'; // Ajouter le widget et le bouton de suppression
-                participantList.appendChild(newLi); // Ajouter l'élément li à la liste
+            // Mettre à jour les participants à chaque changement du nombre de participants
+            nbrParticipantField.addEventListener('change', adjustParticipants);
+
+            // Ajouter un participant manuellement (via le bouton "Ajouter un participant")
+            addParticipantButton.addEventListener('click', () => {
+                let newLi = document.createElement('li');
+                let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
+                newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                participantList.appendChild(newLi);
             });
 
-            // Effacer un participant
+            // Supprimer un participant avec une condition pour ne pas descendre en dessous de 6
             participantList.addEventListener('click', (e) => {
-                if (e.target && e.target.classList.contains('remove-participant')) { // Vérifier si le clic est sur le bouton de suppression
-                    e.target.parentElement.remove(); // Supprimer l'élément parent
+                if (e.target && e.target.classList.contains('remove-participant')) {
+                    if (participantList.children.length > 6) {
+                        e.target.parentElement.remove();
+                        index--; // Décrémenter l'index des participants
+                    } else {
+                        alert("Vous ne pouvez pas supprimer des participants en dessous de 6.");
+                    }
                 }
             });
 
             // Vérification avant la soumission du formulaire
-            form.addEventListener('submit', function(event) { // Ajouter un écouteur d'événement pour la soumission du formulaire
+            form.addEventListener('submit', function(event) {
                 event.preventDefault(); // Empêcher la soumission par défaut
 
                 const formData = new FormData(form); // Créer un objet FormData à partir du formulaire
@@ -222,10 +238,9 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                 })
                 .then(response => response.json()) // Convertir la réponse en JSON
                 .then(data => {
-                    console.log(data);
                     if (data.error) {
                         const errorContainer = document.getElementById('errorContainer');
-                        if (errorContainer) { 
+                        if (errorContainer) {
                             errorContainer.innerHTML = data.error;
                         } else {
                             const errorDiv = document.createElement('div');
@@ -234,13 +249,13 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                             errorDiv.innerHTML = data.error;
                             form.prepend(errorDiv);
                         }
-                    } else { 
+                    } else {
                         if (data.redirectUrl) {
                             window.location.href = data.redirectUrl;
                         } else {
                             document.getElementById('bookingModal').style.display = 'none';
                             alert('Afin de valider votre réservation, merci de procéder au paiement.');
-                
+
                             // Appel AJAX pour créer la session de paiement et redirection
                             fetch(`/create-checkout-session/${data.invoiceId}`)
                                 .then(response => response.json())

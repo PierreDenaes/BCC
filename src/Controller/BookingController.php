@@ -113,10 +113,10 @@ class BookingController extends AbstractController
             $booking->setProfile($profile);
             // Calculer le montant de la facture
             $price = $product->getTarifBase();
-            if ($booking->getIsGroup()) {
-                $participantCount = count($booking->getParticipants());
-                $price *= $participantCount; // Multiplie le tarif de base par le nombre de participants
-            }
+            // if ($booking->getIsGroup()) {
+            //     $participantCount = count($booking->getParticipants());
+            //     $price *= $participantCount; // Multiplie le tarif de base par le nombre de participants
+            // }
             // Créer une facture
             $invoice = new Invoice();
             $invoice->setIssuedAt(new \DateTime());
