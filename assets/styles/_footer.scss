@@ -1,0 +1,26 @@
+#footer{
+    position: fixed;
+    // top:90vh;
+    bottom: 0;
+    padding-right: 70px;
+    left: 70px;
+    z-index: 1000;
+    background-color: rgba(15, 16, 17, 0.9);
+}
+.footerPageLink{
+    a{
+        padding-right: 15px;
+    }
+}
+.footerSocialLink{
+    a{
+        font-size: 1.5rem;
+        padding-right: 20px;
+    }
+}
+@media screen and (max-width: 1200px) {
+    #footer{
+        position: static;
+        background-color: rgba(15, 16, 17, 0.9);
+    }
+}

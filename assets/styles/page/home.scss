@@ -41,11 +41,14 @@
     display: block;
     width: 100%;
 }
+.swiper-pagination {
+    position: static;
+}
 
 #home {
     background-image: url('../../img/logoBlanc-min.png');
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: top center;
 }
 
 .textAccueil {
@@ -71,7 +74,7 @@
 .img-fluid {
     width: 100%;
 }
-h1,h2,h3,#clicMenu {
+h1,h2,h3,.nba-font {
     font-family: 'Nba-kings' !important;
 }
 #smartHomeView{
@@ -97,7 +100,7 @@ h1,h2,h3,#clicMenu {
 }
 .arrow-container {
     position: relative;
-    top:90%;
+    top:75%;
      // Ajuste cette valeur selon la distance que tu veux entre le logo et la flèche
     
     .arrow {
@@ -107,6 +110,10 @@ h1,h2,h3,#clicMenu {
       color: #000;
       animation: bounce 2s infinite;
     }
+  }
+  #calendarIndex {
+    height: 500px;
+    overflow: scrollY;
   }
   @keyframes bounce {
     0%, 100% {
@@ -123,6 +130,9 @@ h1,h2,h3,#clicMenu {
   }
 .avatar{
     width: 500px;
+}
+.product-view{
+    padding-bottom: 96px;
 }
 @media screen and (max-width: 1439px) {
     #desktopHomeView{

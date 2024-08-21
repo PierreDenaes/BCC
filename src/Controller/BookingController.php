@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[IsGranted('ROLE_USER')]
+
 class BookingController extends AbstractController
 {
     #[Route('/bookings', name: 'bookings')] 
@@ -50,7 +50,7 @@ class BookingController extends AbstractController
         }
         return new JsonResponse($events); // Retourne les événements au format JSON
     }
-
+    #[IsGranted('ROLE_USER')]
     #[Route('/booking/form', name: 'booking_form')]
     public function bookingForm(Request $request): Response
     {
@@ -64,7 +64,7 @@ class BookingController extends AbstractController
             'form' => $form->createView(), // Envoie le formulaire à la vue
         ]);
     }
-
+    #[IsGranted('ROLE_USER')]
     #[Route('/book', name: 'book', methods: ['GET', 'POST'])]
     public function book(Request $request, EntityManagerInterface $entityManager, BookingRepository $bookingRepository): Response
     {

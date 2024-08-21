@@ -1,5 +1,26 @@
+import { Calendar } from '@fullcalendar/core';
+import listPlugin from '@fullcalendar/list';
+import frLocale from '@fullcalendar/core/locales/fr';  // Importation de la locale française
 import 'swiper/swiper-bundle.css';
 import '../styles/page/home.scss';
+  
+let calendar;
+function initializeCalendar() {
+    const calendarEl = document.getElementById('calendarIndex');
+    if (calendarEl) {
+        calendar = new Calendar(calendarEl, {
+            plugins: [listPlugin], // Supprimer interactionPlugin si tu veux désactiver les clics
+            initialView: 'listMonth',
+            locale: frLocale,
+            events: '/bookings', // Chargement des dates réservées
+            eventClick: function() { // Redirection globale
+                window.location.href = '/booking';
+            }
+        });
+        calendar.render();
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const swiper = new Swiper(".mySwiper", {
@@ -19,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             el: ".swiper-pagination"
         }
     });
+    initializeCalendar();
 
 });
 document.querySelector('.arrow').addEventListener('click', function(event) {
