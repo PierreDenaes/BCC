@@ -179,104 +179,130 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                 }
             }
 
-            // Fonction pour ajouter des champs de participants
+             // Récupérer les informations de l'utilisateur à partir des attributs data
+             const userName = document.getElementById('participantsContainer').dataset.userName;
+             const userFirstname = document.getElementById('participantsContainer').dataset.userFirstname;
+             const userEmail = document.getElementById('participantsContainer').dataset.userEmail;
+ 
+             
+ 
+             // Fonction pour ajouter des champs de participants
             function addParticipantFields(count) {
                 while (participantList.children.length < count) {
                     let newLi = document.createElement('li');
                     let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
-                    newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                    newLi.innerHTML = newWidget;
+
+                    // N'ajouter le bouton "Supprimer" qu'aux participants autres que le premier
+                    if (participantList.children.length > 0) {
+                        newLi.innerHTML += '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                    }
+
                     participantList.appendChild(newLi);
                 }
             }
+ 
+             // Ajouter les 6 participants minimum dès le départ
+             addParticipantFields(6);
 
-            // Ajouter les 6 participants minimum dès le départ
-            addParticipantFields(6);
-
-            // Fonction pour ajuster le nombre de participants
-            function adjustParticipants() {
-                const count = parseInt(nbrParticipantField.value);
-                if (count >= 6) {
-                    addParticipantFields(count);
-                    // Supprimer les participants supplémentaires si le nombre de participants est réduit
-                    while (participantList.children.length > count) {
-                        participantList.removeChild(participantList.lastChild);
-                    }
-                }
-            }
-
-            // Mettre à jour les participants à chaque changement du nombre de participants
-            nbrParticipantField.addEventListener('change', adjustParticipants);
-
-            // Ajouter un participant manuellement (via le bouton "Ajouter un participant")
-            addParticipantButton.addEventListener('click', () => {
-                let newLi = document.createElement('li');
-                let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
-                newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
-                participantList.appendChild(newLi);
-            });
-
-            // Supprimer un participant avec une condition pour ne pas descendre en dessous de 6
-            participantList.addEventListener('click', (e) => {
-                if (e.target && e.target.classList.contains('remove-participant')) {
-                    if (participantList.children.length > 6) {
-                        e.target.parentElement.remove();
-                        index--; // Décrémenter l'index des participants
-                    } else {
-                        alert("Vous ne pouvez pas supprimer des participants en dessous de 6.");
-                    }
-                }
-            });
-
-            // Vérification avant la soumission du formulaire
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Empêcher la soumission par défaut
-
-                const formData = new FormData(form); // Créer un objet FormData à partir du formulaire
-                fetch('/book', { // Envoyer les données du formulaire à l'API
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json()) // Convertir la réponse en JSON
-                .then(data => {
-                    if (data.error) {
-                        const errorContainer = document.getElementById('errorContainer');
-                        if (errorContainer) {
-                            errorContainer.innerHTML = data.error;
-                        } else {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.id = 'errorContainer';
-                            errorDiv.style.color = 'red';
-                            errorDiv.innerHTML = data.error;
-                            form.prepend(errorDiv);
-                        }
-                    } else {
-                        if (data.redirectUrl) {
-                            window.location.href = data.redirectUrl;
-                        } else {
-                            document.getElementById('bookingModal').style.display = 'none';
-                            alert('Afin de valider votre réservation, merci de procéder au paiement.');
-
-                            // Appel AJAX pour créer la session de paiement et redirection
-                            fetch(`/create-checkout-session/${data.invoiceId}`)
-                                .then(response => response.json())
-                                .then(session => {
-                                    if (session.error) {
-                                        alert(session.error);
-                                    } else {
-                                        const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE'); // Utilise ta clé publique Stripe
-                                        stripe.redirectToCheckout({ sessionId: session.id });
-                                    }
-                                })
-                                .catch(error => console.warn('Error creating Stripe checkout session:', error));
-                        }
-                    }
-                })
-                .catch(error => console.warn('Error submitting the form:', error)); // Afficher une alerte en cas d'erreur
-            });
-        })
-        .catch(error => console.warn('Error fetching the form:', error)); // Afficher une alerte en cas d'erreur
-}
-
+             // Pré-remplir le participant 1 avec les informations de l'utilisateur
+             const nameInput = document.getElementById('booking_participants_0_name'); 
+             const emailInput = document.getElementById('booking_participants_0_email');
+             console.log(nameInput, emailInput);
+             if (nameInput) {
+                 nameInput.value = `${userFirstname} ${userName}`; // Nom complet
+                 nameInput.readOnly = true; // Rendre non modifiable
+             }
+ 
+             if (emailInput) {
+                 emailInput.value = userEmail;
+                 emailInput.readOnly = true; // Rendre non modifiable
+             }
+ 
+             // Fonction pour ajuster le nombre de participants
+             function adjustParticipants() {
+                 const count = parseInt(nbrParticipantField.value);
+                 if (count >= 6) {
+                     addParticipantFields(count);
+                     // Supprimer les participants supplémentaires si le nombre de participants est réduit
+                     while (participantList.children.length > count) {
+                         participantList.removeChild(participantList.lastChild);
+                     }
+                 }
+             }
+ 
+             // Mettre à jour les participants à chaque changement du nombre de participants
+             nbrParticipantField.addEventListener('change', adjustParticipants);
+ 
+             // Ajouter un participant manuellement (via le bouton "Ajouter un participant")
+             addParticipantButton.addEventListener('click', () => {
+                 let newLi = document.createElement('li');
+                 let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
+                 newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                 participantList.appendChild(newLi);
+             });
+ 
+             // Supprimer un participant avec une condition pour ne pas descendre en dessous de 6
+             participantList.addEventListener('click', (e) => {
+                 if (e.target && e.target.classList.contains('remove-participant')) {
+                     if (participantList.children.length > 6) {
+                         e.target.parentElement.remove();
+                         index--; // Décrémenter l'index des participants
+                     } else {
+                         alert("Vous ne pouvez pas supprimer des participants en dessous de 6.");
+                     }
+                 }
+             });
+ 
+             // Vérification avant la soumission du formulaire
+             form.addEventListener('submit', function(event) {
+                 event.preventDefault(); // Empêcher la soumission par défaut
+ 
+                 const formData = new FormData(form); // Créer un objet FormData à partir du formulaire
+                 fetch('/book', { // Envoyer les données du formulaire à l'API
+                     method: 'POST',
+                     body: formData,
+                 })
+                 .then(response => response.json()) // Convertir la réponse en JSON
+                 .then(data => {
+                     if (data.error) {
+                         const errorContainer = document.getElementById('errorContainer');
+                         if (errorContainer) {
+                             errorContainer.innerHTML = data.error;
+                         } else {
+                             const errorDiv = document.createElement('div');
+                             errorDiv.id = 'errorContainer';
+                             errorDiv.style.color = 'red';
+                             errorDiv.innerHTML = data.error;
+                             form.prepend(errorDiv);
+                         }
+                     } else {
+                         if (data.redirectUrl) {
+                             window.location.href = data.redirectUrl;
+                         } else {
+                             document.getElementById('bookingModal').style.display = 'none';
+                             alert('Afin de valider votre réservation, merci de procéder au paiement.');
+ 
+                             // Appel AJAX pour créer la session de paiement et redirection
+                             fetch(`/create-checkout-session/${data.invoiceId}`)
+                                 .then(response => response.json())
+                                 .then(session => {
+                                     if (session.error) {
+                                         alert(session.error);
+                                     } else {
+                                         const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE'); // Utilise ta clé publique Stripe
+                                         stripe.redirectToCheckout({ sessionId: session.id });
+                                     }
+                                 })
+                                 .catch(error => console.warn('Error creating Stripe checkout session:', error));
+                         }
+                     }
+                 })
+                 .catch(error => console.warn('Error submitting the form:', error)); // Afficher une alerte en cas d'erreur
+             });
+         })
+         .catch(error => console.warn('Error fetching the form:', error)); // Afficher une alerte en cas d'erreur
+ }
 // Fermer la modal
 document.querySelector('.close').onclick = function() { // Ajouter un écouteur d'événement pour le bouton de fermeture
     document.getElementById('bookingModal').style.display = 'none';

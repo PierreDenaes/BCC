@@ -12,17 +12,20 @@
         <div class="mb-3">
             {{ form_row(form.nbrParticipant, {'attr': {'id': 'booking_nbrParticipant'}}) }}
         </div>
-        <div class="mb-3" id="participantsContainer">
-            <ul id="participant-list" data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
-                {% for participant in form.participants %}
-                    <li>
-                        {{ form_widget(participant) }}
-                        <button type="button" class="remove-participant btn btn-danger">Supprimer</button>
-                    </li>
-                {% endfor %}
-            </ul>
-            <button type="button" id="add-participant" class="btn btn-secondary">Ajouter un participant</button>
-        </div>
+        <div class="mb-3" id="participantsContainer" data-user-name="{{ app.user.profile.name }}" 
+     data-user-firstname="{{ app.user.profile.firstname }}"  data-user-email="{{ app.user.email }}">
+    <ul id="participant-list" data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
+        {% for participant in form.participants %}
+            <li>
+                {{ form_widget(participant, {'attr': loop.index == 1 ? {'readonly': true} : {}}) }}
+                {% if loop.index > 1 %}
+                    <button type="button" class="remove-participant btn btn-danger">Supprimer</button>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <button type="button" id="add-participant" class="btn btn-secondary">Ajouter un participant</button>
+</div>
         <button class="btn btn-blueboot">Réserver</button>
         {{ form_end(form) }}
 
