@@ -4,10 +4,11 @@ namespace App\Form;
 
 use App\Entity\Participants;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ParticipantType extends AbstractType
 {
@@ -19,6 +20,9 @@ class ParticipantType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
+            ])
+            ->add('isNotified', CheckboxType::class, [
+                'label' => 'Envoyer les informations ?'
             ]);
     }
 

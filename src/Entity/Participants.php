@@ -23,6 +23,9 @@ class Participants
     #[ORM\JoinColumn(nullable: false)]
     private ?Booking $booking = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isNotified = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,5 +69,17 @@ class Participants
     public function __toString(): string
     {
         return $this->name.' '.$this->email;
+    }
+
+    public function isNotified(): ?bool
+    {
+        return $this->isNotified;
+    }
+
+    public function setNotified(?bool $isNotified): static
+    {
+        $this->isNotified = $isNotified;
+
+        return $this;
     }
 }

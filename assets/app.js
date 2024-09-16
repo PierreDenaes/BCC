@@ -19,4 +19,14 @@ document.addEventListener('click', (event) => {
         sidebar.classList.remove('expand');
     }
 });
+window.addEventListener('scroll', function() {
+    const footer = document.getElementById('footer');
+    
+    // Si l'utilisateur a scrollé de plus de 50px
+    if (window.scrollY > 50) {
+        footer.classList.add('footer-normal');
+    } else {
+        footer.classList.remove('footer-normal');
+    }
+});
 
