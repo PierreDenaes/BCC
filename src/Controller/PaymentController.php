@@ -140,14 +140,17 @@ class PaymentController extends AbstractController
 
                 // Send email notifications to participants
                 foreach ($booking->getParticipants() as $participant) {
-                    $participantEmailContent = $this->generateParticipantEmailContent($participant, $booking);
-                    $this->sendEmail(
-                        $this->mailer,
-                        'contact@bootcampscenturio.com',
-                        $participant->getEmail(),
-                        'Vous avez été ajouté à une réservation',
-                        $participantEmailContent
-                    );
+                    // Vérifie si le participant doit être notifié
+                    if ($participant->isNotified()) {
+                        $participantEmailContent = $this->generateParticipantEmailContent($participant, $booking);
+                        $this->sendEmail(
+                            $this->mailer,
+                            'contact@bootcampscenturio.com',
+                            $participant->getEmail(),
+                            'Vous avez été ajouté à une réservation',
+                            $participantEmailContent
+                        );
+                    }
                 }
 
                 $this->logger->info('Invoice and booking updated, email notifications sent', ['invoiceId' => $invoice->getId(), 'bookingId' => $booking->getId()]);
