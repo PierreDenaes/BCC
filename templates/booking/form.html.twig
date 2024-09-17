@@ -18,6 +18,10 @@
         {% for participant in form.participants %}
             <li>
                 {{ form_widget(participant, {'attr': loop.index == 1 ? {'readonly': true} : {}}) }}
+                <div>
+                    {{ form_label(participant.isNotified) }} <!-- Label pour le champ isNotified -->
+                    {{ form_widget(participant.isNotified) }} <!-- Checkbox isNotified -->
+                </div>
                 {% if loop.index > 1 %}
                     <button type="button" class="remove-participant btn btn-danger">Supprimer</button>
                 {% endif %}

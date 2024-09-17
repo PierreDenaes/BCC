@@ -76,7 +76,7 @@ class Participants
         return $this->isNotified;
     }
 
-    public function setNotified(?bool $isNotified): static
+    public function setIsNotified(?bool $isNotified): static
     {
         $this->isNotified = $isNotified;
 

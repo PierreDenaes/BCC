@@ -22,7 +22,8 @@ class ParticipantType extends AbstractType
                 'label' => 'Email',
             ])
             ->add('isNotified', CheckboxType::class, [
-                'label' => 'Envoyer les informations ?'
+                'label' => 'Envoyer les informations ?',
+                'required' => false, // Pour ne pas forcer la sélection
             ]);
     }
 
