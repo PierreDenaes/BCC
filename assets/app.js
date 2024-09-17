@@ -1,5 +1,6 @@
 import 'bootstrap';
 import 'lineicons/web-font/lineicons.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import './styles/app.scss';
 
 

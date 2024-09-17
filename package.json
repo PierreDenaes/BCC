@@ -29,6 +29,7 @@
         "@fullcalendar/daygrid": "^6.1.12",
         "@fullcalendar/interaction": "^6.1.12",
         "@fullcalendar/list": "^6.1.15",
+        "bootstrap-icons": "^1.11.3",
         "lineicons": "^1.0.3",
         "swiper": "^11.1.3"
     }
