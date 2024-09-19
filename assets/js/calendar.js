@@ -134,59 +134,54 @@ function initializeCalendar() {
 }
 
 // Fonction pour ouvrir le formulaire de réservation
-function openBookingForm(date, forfait) { // Prendre la date et le forfait en paramètres
-    fetch(`/booking/form?date=${date}&forfait=${forfait}`) // Récupérer le formulaire de réservation
-        .then(response => response.text()) // Convertir la réponse en texte
-        .then(html => { // Manipuler le HTML
-            document.getElementById('bookingFormContainer').innerHTML = html; // Injecter le formulaire dans la modal
-            document.getElementById('bookingModal').style.display = 'block'; // Afficher la modal
+function openBookingForm(date, forfait) { 
+    fetch(`/booking/form?date=${date}&forfait=${forfait}`) 
+        .then(response => response.text()) 
+        .then(html => { 
+            document.getElementById('bookingFormContainer').innerHTML = html; 
+            document.getElementById('bookingModal').style.display = 'block';
 
             // Ajouter la date dans un champ caché du formulaire
-            const form = document.querySelector('#bookingForm'); // Sélectionner le formulaire
-            const hiddenDateInput = document.createElement('input'); // Créer un champ caché
-            hiddenDateInput.type = 'hidden'; // Définir le type du champ
-            hiddenDateInput.name = 'bookAt'; // Définir le nom du champ
-            hiddenDateInput.value = date + " 08:00:00"; // Ajouter l'heure fixe
-            form.appendChild(hiddenDateInput); // Ajouter le champ au formulaire
+            const form = document.querySelector('#bookingForm'); 
+            const hiddenDateInput = document.createElement('input'); 
+            hiddenDateInput.type = 'hidden'; 
+            hiddenDateInput.name = 'bookAt'; 
+            hiddenDateInput.value = date + " 08:00:00"; 
+            form.appendChild(hiddenDateInput); 
 
             // Initialiser les champs
-            const periodField = document.getElementById('booking_period').closest('.mb-3'); // Sélectionner le champ de période
-            const productField = document.getElementById('booking_product'); // Sélectionner le champ de produit
-            const nbrParticipantField = document.getElementById('booking_nbrParticipant'); // Sélectionner le champ du nombre de participants
-            const participantList = document.getElementById('participant-list'); // Sélectionner le conteneur des participants
-            const addParticipantButton = document.getElementById('add-participant'); // Bouton pour ajouter des participants
-            let index = participantList.children.length; // Initialiser l'index des participants
+            const periodField = document.getElementById('booking_period').closest('.mb-3'); 
+            const productField = document.getElementById('booking_product'); 
+            const nbrParticipantField = document.getElementById('booking_nbrParticipant'); 
+            const participantList = document.getElementById('participant-list'); 
+            const addParticipantButton = document.getElementById('add-participant'); 
+            let index = participantList.children.length;
 
             // Fonction pour basculer la visibilité du champ de période
-            function togglePeriodField() { // Fonction pour basculer la visibilité du champ de période
-                if (parseInt(productField.value) === 3) { // Vérifier si le produit est un forfait 1/2journée
-                    periodField.style.display = ''; // Afficher le champ de période
+            function togglePeriodField() { 
+                if (parseInt(productField.value) === 3) { 
+                    periodField.style.display = ''; 
                 } else {
-                    periodField.style.display = 'none'; // Masquer le champ de période
+                    periodField.style.display = 'none'; 
                 }
             }
 
-            togglePeriodField(); // Appeler la fonction pour initialiser l'affichage
-
-            // Ajouter un écouteur d'événement pour le champ de produit
+            togglePeriodField(); 
             productField.addEventListener('change', togglePeriodField);
 
-            // Sélectionner la période par défaut si aucune période n'est précisée
-            if (parseInt(productField.value) === 3) { // Vérifier si le produit est un forfait 1/2journée
+            if (parseInt(productField.value) === 3) { 
                 const periodSelect = document.getElementById('booking_period');
-                if (!periodSelect.value) { // Vérifier si aucune période n'est précisée
-                    periodSelect.value = 'morning'; // Valeur par défaut pour la période
+                if (!periodSelect.value) { 
+                    periodSelect.value = 'morning'; 
                 }
             }
 
-             // Récupérer les informations de l'utilisateur à partir des attributs data
-             const userName = document.getElementById('participantsContainer').dataset.userName;
-             const userFirstname = document.getElementById('participantsContainer').dataset.userFirstname;
-             const userEmail = document.getElementById('participantsContainer').dataset.userEmail;
- 
-             
- 
-             // Fonction pour ajouter des champs de participants
+            // Récupérer les informations de l'utilisateur à partir des attributs data
+            const userName = document.getElementById('participantsContainer').dataset.userName;
+            const userFirstname = document.getElementById('participantsContainer').dataset.userFirstname;
+            const userEmail = document.getElementById('participantsContainer').dataset.userEmail;
+
+            // Fonction pour ajouter des champs de participants
             function addParticipantFields(count) {
                 while (participantList.children.length < count) {
                     let newLi = document.createElement('li');
@@ -201,11 +196,11 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                     participantList.appendChild(newLi);
                 }
             }
- 
-             // Ajouter les 6 participants minimum dès le départ
-             addParticipantFields(6);
 
-             // Pré-remplir le participant 1 avec les informations de l'utilisateur
+            // Ajouter les 6 participants minimum dès le départ
+            addParticipantFields(6);
+
+            // Pré-remplir le participant 1 avec les informations de l'utilisateur
             const nameInput = document.getElementById('booking_participants_0_name'); 
             const emailInput = document.getElementById('booking_participants_0_email');
             const isNotifiedInput = document.getElementById('booking_participants_0_isNotified')
@@ -215,112 +210,136 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
             const emailLabel = document.querySelector('label[for="booking_participants_0_email"]');
             const isNotifiedLabel = document.querySelector('label[for="booking_participants_0_isNotified"]');
             if (nameInput) {
-                nameInput.value = `${userFirstname} ${userName}`; // Nom complet
-                nameInput.readOnly = true; // Rendre non modifiable
-                nameInput.type = 'hidden'; // Masquer l'input
-                if (nameLabel) nameLabel.style.display = 'none'; // Masquer le label
+                nameInput.value = `${userFirstname} ${userName}`; 
+                nameInput.readOnly = true; 
+                nameInput.type = 'hidden'; 
+                if (nameLabel) nameLabel.style.display = 'none'; 
             }
 
             if (emailInput) {
                 emailInput.value = userEmail;
-                emailInput.readOnly = true; // Rendre non modifiable
-                emailInput.type = 'hidden'; // Masquer l'input
-                if (emailLabel) emailLabel.style.display = 'none'; // Masquer le label
+                emailInput.readOnly = true; 
+                emailInput.type = 'hidden'; 
+                if (emailLabel) emailLabel.style.display = 'none'; 
             }
 
             if (isNotifiedInput) {
                 isNotifiedInput.value = 0;
                 isNotifiedInput.readOnly = true;
                 isNotifiedInput.type = 'hidden';
-                if (isNotifiedLabel) isNotifiedLabel.style.display = 'none'
+                if (isNotifiedLabel) isNotifiedLabel.style.display = 'none';
             }
- 
-             // Fonction pour ajuster le nombre de participants
-             function adjustParticipants() {
-                 const count = parseInt(nbrParticipantField.value);
-                 if (count >= 6) {
-                     addParticipantFields(count);
-                     // Supprimer les participants supplémentaires si le nombre de participants est réduit
-                     while (participantList.children.length > count) {
-                         participantList.removeChild(participantList.lastChild);
-                     }
-                 }
-             }
- 
-             // Mettre à jour les participants à chaque changement du nombre de participants
-             nbrParticipantField.addEventListener('change', adjustParticipants);
- 
-             // Ajouter un participant manuellement (via le bouton "Ajouter un participant")
-             addParticipantButton.addEventListener('click', () => {
-                 let newLi = document.createElement('li');
-                 let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
-                 newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-link text-decoration-none text-danger fw-bold">Supprimer <i class="bi bi-trash-fill"></i></button>';
-                 participantList.appendChild(newLi);
-             });
- 
-             // Supprimer un participant avec une condition pour ne pas descendre en dessous de 6
-             participantList.addEventListener('click', (e) => {
-                 if (e.target && e.target.classList.contains('remove-participant')) {
-                     if (participantList.children.length > 6) {
-                         e.target.parentElement.remove();
-                         index--; // Décrémenter l'index des participants
-                     } else {
-                         alert("Vous ne pouvez pas supprimer des participants en dessous de 6.");
-                     }
-                 }
-             });
- 
-             // Vérification avant la soumission du formulaire
-             form.addEventListener('submit', function(event) {
-                 event.preventDefault(); // Empêcher la soumission par défaut
- 
-                 const formData = new FormData(form); // Créer un objet FormData à partir du formulaire
-                 // Vérification des données soumises
-    console.log([...formData.entries()]); // Vérifie le contenu de FormData, notamment `isNotified`
-                 fetch('/book', { // Envoyer les données du formulaire à l'API
-                     method: 'POST',
-                     body: formData,
-                 })
-                 .then(response => response.json()) // Convertir la réponse en JSON
-                 .then(data => {
-                     if (data.error) {
-                         const errorContainer = document.getElementById('errorContainer');
-                         if (errorContainer) {
-                             errorContainer.innerHTML = data.error;
-                         } else {
-                             const errorDiv = document.createElement('div');
-                             errorDiv.id = 'errorContainer';
-                             errorDiv.style.color = 'red';
-                             errorDiv.innerHTML = data.error;
-                             form.prepend(errorDiv);
-                         }
-                     } else {
-                         if (data.redirectUrl) {
-                             window.location.href = data.redirectUrl;
-                         } else {
-                             document.getElementById('bookingModal').style.display = 'none';
-                             alert('Afin de valider votre réservation, merci de procéder au paiement.');
- 
-                             // Appel AJAX pour créer la session de paiement et redirection
-                             fetch(`/create-checkout-session/${data.invoiceId}`)
-                                 .then(response => response.json())
-                                 .then(session => {
-                                     if (session.error) {
-                                         alert(session.error);
-                                     } else {
-                                         const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE'); // Utilise ta clé publique Stripe
-                                         stripe.redirectToCheckout({ sessionId: session.id });
-                                     }
-                                 })
-                                 .catch(error => console.warn('Error creating Stripe checkout session:', error));
-                         }
-                     }
-                 })
-                 .catch(error => console.warn('Error submitting the form:', error)); // Afficher une alerte en cas d'erreur
-             });
-         })
-         .catch(error => console.warn('Error fetching the form:', error)); // Afficher une alerte en cas d'erreur
- }
+
+            // Fonction pour ajuster le nombre de participants
+            function adjustParticipants() {
+                const count = parseInt(nbrParticipantField.value);
+                if (count >= 6) {
+                    addParticipantFields(count);
+                    // Supprimer les participants supplémentaires si le nombre de participants est réduit
+                    while (participantList.children.length > count) {
+                        participantList.removeChild(participantList.lastChild);
+                    }
+                }
+            }
+
+            // Mettre à jour les participants à chaque changement du nombre de participants
+            nbrParticipantField.addEventListener('change', adjustParticipants);
+
+            // Ajouter un participant manuellement (via le bouton "Ajouter un participant")
+            addParticipantButton.addEventListener('click', () => {
+                let newLi = document.createElement('li');
+                let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
+                newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-link text-decoration-none text-danger fw-bold">Supprimer <i class="bi bi-trash-fill"></i></button>';
+                participantList.appendChild(newLi);
+            });
+
+            // Supprimer un participant avec une condition pour ne pas descendre en dessous de 6
+            participantList.addEventListener('click', (e) => {
+                if (e.target && e.target.classList.contains('remove-participant')) {
+                    if (participantList.children.length > 6) {
+                        e.target.parentElement.remove();
+                        index--; 
+                    } else {
+                        alert("Vous ne pouvez pas supprimer des participants en dessous de 6.");
+                    }
+                }
+            });
+
+            // Vérification avant la soumission du formulaire
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+
+                let isValid = true;
+                const participants = document.querySelectorAll('#participant-list li');
+    
+                participants.forEach((participant, index) => {
+                    const nameInput = participant.querySelector('input[name*="[name]"]');
+                    const emailInput = participant.querySelector('input[name*="[email]"]');
+
+                    if (index > 0) { // Ne pas vérifier l'organisateur
+                        if (!nameInput.value || !emailInput.value) {
+                            isValid = false;
+                            nameInput.classList.add('is-invalid'); // Ajoute une classe d'erreur
+                            emailInput.classList.add('is-invalid'); // Ajoute une classe d'erreur
+                        } else {
+                            nameInput.classList.remove('is-invalid'); // Supprime la classe d'erreur
+                            emailInput.classList.remove('is-invalid'); // Supprime la classe d'erreur
+                        }
+                    }
+                });
+
+                if (!isValid) {
+                    alert("Veuillez remplir tous les champs des participants.");
+                    return; 
+                }
+
+                const formData = new FormData(form); 
+                console.log([...formData.entries()]);
+
+                fetch('/book', { 
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json()) 
+                .then(data => {
+                    if (data.error) {
+                        const errorContainer = document.getElementById('errorContainer');
+                        if (errorContainer) {
+                            errorContainer.innerHTML = data.error;
+                        } else {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.id = 'errorContainer';
+                            errorDiv.style.color = 'red';
+                            errorDiv.innerHTML = data.error;
+                            form.prepend(errorDiv);
+                        }
+                    } else {
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            document.getElementById('bookingModal').style.display = 'none';
+                            alert('Afin de valider votre réservation, merci de procéder au paiement.');
+
+                            fetch(`/create-checkout-session/${data.invoiceId}`)
+                                .then(response => response.json())
+                                .then(session => {
+                                    if (session.error) {
+                                        alert(session.error);
+                                    } else {
+                                        const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE');
+                                        stripe.redirectToCheckout({sessionId: session.id 
+                                        });
+                                    }
+                                })
+                                .catch(error => console.warn('Error creating Stripe checkout session:', error));
+                        }
+                    }
+                })
+                .catch(error => console.warn('Error submitting the form:', error)); 
+            });
+        })
+        .catch(error => console.warn('Error fetching the form:', error)); 
+}
 // Fermer la modal
 document.querySelector('.close').onclick = function() { // Ajouter un écouteur d'événement pour le bouton de fermeture
     document.getElementById('bookingModal').style.display = 'none';
