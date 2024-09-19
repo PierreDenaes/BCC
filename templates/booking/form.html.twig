@@ -17,6 +17,7 @@
         </div>
 
         <div class="mb-3" id="participantsContainer" 
+            data-product-prices='{{ productPricesJson|raw }}'
              data-user-name="{{ app.user.profile.name }}" 
              data-user-firstname="{{ app.user.profile.firstname }}"  
              data-user-email="{{ app.user.email }}">

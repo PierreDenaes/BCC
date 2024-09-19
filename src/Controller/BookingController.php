@@ -7,6 +7,7 @@ use App\Entity\Invoice;
 use App\Entity\Product;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,8 +53,19 @@ class BookingController extends AbstractController
     }
     #[IsGranted('ROLE_USER')]
     #[Route('/booking/form', name: 'booking_form')]
-    public function bookingForm(Request $request): Response
+    public function bookingForm(Request $request, ProductRepository $productRepository): Response
     {
+        // Récupérer les produits et leurs tarifs
+        $products = $productRepository->findAll();
+        $productPrices = [];
+        foreach ($products as $product) {
+            $productPrices[$product->getId()] = [
+                'name' => $product->getForfait(),
+                'price' => $product->getTarifBase(),
+            ];
+        }
+        $productPricesJson = json_encode($productPrices);
+
         $date = $request->query->get('date'); // Récupère la date passée en paramètre
         $booking = new Booking(); // Crée une nouvelle réservation
         $dateTime = new \DateTime($date); // Convertit la date en objet DateTime
@@ -62,6 +74,7 @@ class BookingController extends AbstractController
         $form = $this->createForm(BookingType::class, $booking); // Crée le formulaire
         return $this->render('booking/form.html.twig', [
             'form' => $form->createView(), // Envoie le formulaire à la vue
+            'productPricesJson' => $productPricesJson, // Passer les tarifs à la vue
         ]);
     }
     #[IsGranted('ROLE_USER')]
@@ -120,11 +133,6 @@ class BookingController extends AbstractController
             $price = $product->getTarifBase();
             $nbrParticipant = count($booking->getParticipants());
             $totalPrice = $price * $nbrParticipant;
-            // if ($booking->getIsGroup()) {
-            //     $participantCount = count($booking->getParticipants());
-            //     $price *= $participantCount; // Multiplie le tarif de base par le nombre de participants
-            // }
-            // Créer une facture
             $invoice = new Invoice();
             $invoice->setIssuedAt(new \DateTime());
             $invoice->setBooking($booking);
