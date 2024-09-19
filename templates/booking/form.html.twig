@@ -3,33 +3,64 @@
     <div class="col-8">
         <h1>Formulaire de réservation</h1>
         {{ form_start(form, {'attr': {'id': 'bookingForm'}}) }}
+
         <div class="mb-3">
             {{ form_row(form.product, {'attr': {'id': 'booking_product'}}) }}
         </div>
+
         <div class="mb-3">
             {{ form_row(form.period, {'attr': {'id': 'booking_period'}}) }}
         </div>
+
         <div class="mb-3">
             {{ form_row(form.nbrParticipant, {'attr': {'id': 'booking_nbrParticipant'}}) }}
         </div>
-        <div class="mb-3" id="participantsContainer" data-user-name="{{ app.user.profile.name }}" 
-     data-user-firstname="{{ app.user.profile.firstname }}"  data-user-email="{{ app.user.email }}">
-    <ul id="participant-list" data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
-        {% for participant in form.participants %}
-            <li>
-                {{ form_widget(participant, {'attr': loop.index == 1 ? {'readonly': true} : {}}) }}
-                <div>
-                    {{ form_label(participant.isNotified) }} <!-- Label pour le champ isNotified -->
-                    {{ form_widget(participant.isNotified) }} <!-- Checkbox isNotified -->
+
+        <div class="mb-3" id="participantsContainer" 
+             data-user-name="{{ app.user.profile.name }}" 
+             data-user-firstname="{{ app.user.profile.firstname }}"  
+             data-user-email="{{ app.user.email }}">
+
+            <ul id="participant-list" 
+                data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
+
+                {% for participant in form.participants %}
+    <li>
+        <div class="row">
+            {% if loop.first %}
+                {# Organisateur (1er participant), rendu en hidden #}
+                <div class="col-md-5">
+                    {{ form_widget(participant.name, {'attr': {'type': 'hidden'}}) }}
                 </div>
-                {% if loop.index > 1 %}
-                    <button type="button" class="remove-participant btn btn-danger">Supprimer</button>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-    <button type="button" id="add-participant" class="btn btn-secondary">Ajouter un participant</button>
-</div>
+                <div class="col-md-5">
+                    {{ form_widget(participant.email, {'attr': {'type': 'hidden'}}) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_widget(participant.isNotified, {'attr': {'type': 'hidden', 'value': 0}}) }}
+                </div>
+            {% else %}
+                {# Les autres participants sont affichés normalement #}
+                <div class="col-md-5">
+                    {{ form_row(participant.name) }}
+                </div>
+                <div class="col-md-5">
+                    {{ form_row(participant.email) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_row(participant.isNotified) }}
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="remove-participant btn btn-link text-decoration-none text-danger fw-bold">Supprimer <i class="bi bi-trash-fill"></i></button>
+                </div>
+            {% endif %}
+        </div>
+    </li>
+{% endfor %}
+            </ul>
+            
+            <button type="button" id="add-participant" class="btn btn-secondary">Ajouter un participant</button>
+        </div>
+
         <button class="btn btn-blueboot">Réserver</button>
         {{ form_end(form) }}
 

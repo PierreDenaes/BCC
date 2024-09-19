@@ -72,6 +72,11 @@ class BookingController extends AbstractController
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // Assure-toi que l'organisateur (premier participant) ne soit pas notifié
+            $participants = $booking->getParticipants();
+            if (isset($participants[0])) {
+                $participants[0]->setIsNotified(false); // Forcer isNotified à false pour l'organisateur
+            }
             $product = $booking->getProduct();
             // Vérifions la date reçue
             $date = $request->request->get('bookAt');

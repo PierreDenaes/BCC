@@ -195,7 +195,7 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
 
                     // N'ajouter le bouton "Supprimer" qu'aux participants autres que le premier
                     if (participantList.children.length > 0) {
-                        newLi.innerHTML += '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                        newLi.innerHTML += '<button type="button" class="remove-participant btn btn-link text-decoration-none text-danger fw-bold">Supprimer <i class="bi bi-trash-fill"></i></button>';
                     }
 
                     participantList.appendChild(newLi);
@@ -206,18 +206,34 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
              addParticipantFields(6);
 
              // Pré-remplir le participant 1 avec les informations de l'utilisateur
-             const nameInput = document.getElementById('booking_participants_0_name'); 
-             const emailInput = document.getElementById('booking_participants_0_email');
-             console.log(nameInput, emailInput);
-             if (nameInput) {
-                 nameInput.value = `${userFirstname} ${userName}`; // Nom complet
-                 nameInput.readOnly = true; // Rendre non modifiable
-             }
- 
-             if (emailInput) {
-                 emailInput.value = userEmail;
-                 emailInput.readOnly = true; // Rendre non modifiable
-             }
+            const nameInput = document.getElementById('booking_participants_0_name'); 
+            const emailInput = document.getElementById('booking_participants_0_email');
+            const isNotifiedInput = document.getElementById('booking_participants_0_isNotified')
+
+            // Cible les labels associés
+            const nameLabel = document.querySelector('label[for="booking_participants_0_name"]');
+            const emailLabel = document.querySelector('label[for="booking_participants_0_email"]');
+            const isNotifiedLabel = document.querySelector('label[for="booking_participants_0_isNotified"]');
+            if (nameInput) {
+                nameInput.value = `${userFirstname} ${userName}`; // Nom complet
+                nameInput.readOnly = true; // Rendre non modifiable
+                nameInput.type = 'hidden'; // Masquer l'input
+                if (nameLabel) nameLabel.style.display = 'none'; // Masquer le label
+            }
+
+            if (emailInput) {
+                emailInput.value = userEmail;
+                emailInput.readOnly = true; // Rendre non modifiable
+                emailInput.type = 'hidden'; // Masquer l'input
+                if (emailLabel) emailLabel.style.display = 'none'; // Masquer le label
+            }
+
+            if (isNotifiedInput) {
+                isNotifiedInput.value = 0;
+                isNotifiedInput.readOnly = true;
+                isNotifiedInput.type = 'hidden';
+                if (isNotifiedLabel) isNotifiedLabel.style.display = 'none'
+            }
  
              // Fonction pour ajuster le nombre de participants
              function adjustParticipants() {
@@ -238,7 +254,7 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
              addParticipantButton.addEventListener('click', () => {
                  let newLi = document.createElement('li');
                  let newWidget = participantList.dataset.prototype.replace(/__name__/g, index++);
-                 newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-danger">Supprimer</button>';
+                 newLi.innerHTML = newWidget + '<button type="button" class="remove-participant btn btn-link text-decoration-none text-danger fw-bold">Supprimer <i class="bi bi-trash-fill"></i></button>';
                  participantList.appendChild(newLi);
              });
  
@@ -259,6 +275,8 @@ function openBookingForm(date, forfait) { // Prendre la date et le forfait en pa
                  event.preventDefault(); // Empêcher la soumission par défaut
  
                  const formData = new FormData(form); // Créer un objet FormData à partir du formulaire
+                 // Vérification des données soumises
+    console.log([...formData.entries()]); // Vérifie le contenu de FormData, notamment `isNotified`
                  fetch('/book', { // Envoyer les données du formulaire à l'API
                      method: 'POST',
                      body: formData,
