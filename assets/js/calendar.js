@@ -265,13 +265,13 @@ function openBookingForm(date, forfait) {
                 }
             });
 
-            // Vérification avant la soumission du formulaire
+            // Vérification avant la soumission du formulaire avec récapitulatif
             form.addEventListener('submit', function(event) {
                 event.preventDefault(); 
 
                 let isValid = true;
                 const participants = document.querySelectorAll('#participant-list li');
-    
+
                 participants.forEach((participant, index) => {
                     const nameInput = participant.querySelector('input[name*="[name]"]');
                     const emailInput = participant.querySelector('input[name*="[email]"]');
@@ -293,33 +293,39 @@ function openBookingForm(date, forfait) {
                     return; 
                 }
 
-                const formData = new FormData(form); 
-                console.log([...formData.entries()]);
+                // Collecter les données du formulaire pour affichage du récapitulatif
+                const productText = productField.options[productField.selectedIndex].text; // Récupérer le texte du produit sélectionné
+                const nbrParticipantsValue = nbrParticipantField.value; // Récupérer le nombre de participants
 
-                fetch('/book', { 
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json()) 
-                .then(data => {
-                    if (data.error) {
-                        const errorContainer = document.getElementById('errorContainer');
-                        if (errorContainer) {
-                            errorContainer.innerHTML = data.error;
-                        } else {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.id = 'errorContainer';
-                            errorDiv.style.color = 'red';
-                            errorDiv.innerHTML = data.error;
-                            form.prepend(errorDiv);
-                        }
-                    } else {
-                        if (data.redirectUrl) {
-                            window.location.href = data.redirectUrl;
-                        } else {
-                            document.getElementById('bookingModal').style.display = 'none';
-                            alert('Afin de valider votre réservation, merci de procéder au paiement.');
+                let recapContent = `
+                    <p><strong>Produit : </strong>${productText}</p>
+                    <p><strong>Nombre de participants : </strong>${nbrParticipantsValue}</p>
+                `;
 
+                const participantList = document.getElementById('participant-list');
+                participantList.querySelectorAll('li').forEach((li, index) => {
+                    const name = li.querySelector('input[name*="[name]"]').value;
+                    const email = li.querySelector('input[name*="[email]"]').value;
+                    recapContent += `<p><strong>Participant ${index + 1} : </strong> ${name}, ${email}</p>`;
+                });
+
+                // Afficher le récapitulatif dans la modale
+                document.getElementById('recapContent').innerHTML = recapContent;
+                document.getElementById('recapModal').style.display = 'block';
+
+                // Gérer les actions sur la modale
+                document.getElementById('confirmButton').onclick = function() {
+                    // Soumettre le formulaire avec fetch au lieu de form.submit();
+                    const formData = new FormData(form);
+
+                    fetch('/book', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Une fois que la réservation est réussie, créer la session Stripe
                             fetch(`/create-checkout-session/${data.invoiceId}`)
                                 .then(response => response.json())
                                 .then(session => {
@@ -327,15 +333,24 @@ function openBookingForm(date, forfait) {
                                         alert(session.error);
                                     } else {
                                         const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE');
-                                        stripe.redirectToCheckout({sessionId: session.id 
-                                        });
+                                        stripe.redirectToCheckout({ sessionId: session.id });
                                     }
                                 })
-                                .catch(error => console.warn('Error creating Stripe checkout session:', error));
+                                .catch(error => console.warn('Erreur lors de la création de la session Stripe:', error));
+                        } else {
+                            alert("Une erreur est survenue lors de la réservation.");
                         }
-                    }
-                })
-                .catch(error => console.warn('Error submitting the form:', error)); 
+                    })
+                    .catch(error => console.warn('Erreur lors de la soumission du formulaire:', error));
+                };
+
+                document.getElementById('modifyButton').onclick = function() {
+                    document.getElementById('recapModal').style.display = 'none'; // Cacher la modale pour modification
+                };
+
+                document.querySelector('#recapModal .close').onclick = function() {
+                    document.getElementById('recapModal').style.display = 'none';
+                };
             });
         })
         .catch(error => console.warn('Error fetching the form:', error)); 
