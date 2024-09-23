@@ -151,6 +151,7 @@ class BookingFormManager {
         this.date = date;
         this.forfait = forfait;
         this.form = null;
+        this.productPrices = {}; // Initialisation de la variable pour les prix des produits
         this.init();
     }
 
@@ -200,6 +201,10 @@ class BookingFormManager {
         this.addParticipantButton = document.getElementById('add-participant');
         this.index = this.participantList.children.length;
 
+        // Récupérer les prix des produits depuis l'attribut data-product-prices
+        const participantsContainer = document.getElementById('participantsContainer');
+        this.productPrices = JSON.parse(participantsContainer.dataset.productPrices);
+
         this.togglePeriodField();
         this.productField.addEventListener('change', this.togglePeriodField.bind(this));
 
@@ -220,9 +225,10 @@ class BookingFormManager {
 
     // Pré-remplir le premier participant avec les informations de l'utilisateur
     prefillFirstParticipant() {
-        const userName = document.getElementById('participantsContainer').dataset.userName;
-        const userFirstname = document.getElementById('participantsContainer').dataset.userFirstname;
-        const userEmail = document.getElementById('participantsContainer').dataset.userEmail;
+        const participantsContainer = document.getElementById('participantsContainer');
+        const userName = participantsContainer.dataset.userName;
+        const userFirstname = participantsContainer.dataset.userFirstname;
+        const userEmail = participantsContainer.dataset.userEmail;
 
         const nameInput = document.getElementById('booking_participants_0_name');
         const emailInput = document.getElementById('booking_participants_0_email');
@@ -337,17 +343,25 @@ class BookingFormManager {
     // Afficher la modale de récapitulatif
     showRecapModal() {
         const productText = this.productField.options[this.productField.selectedIndex].text;
-        const nbrParticipantsValue = this.nbrParticipantField.value;
-        console.log(nbrParticipantsValue);
+        const nbrParticipantsValue = parseInt(this.nbrParticipantField.value);
+
+        // Récupérer l'ID du produit sélectionné
+        const selectedProductId = this.productField.value;
+        // Récupérer le prix du produit à partir de this.productPrices
+        const productPrice = parseFloat(this.productPrices[selectedProductId].price);
+        // Calculer le total
+        const totalPrice = productPrice * nbrParticipantsValue;
 
         let recapContent = `
             <p><strong>Produit : </strong>${productText}</p>
             <p><strong>Nombre de participants : </strong>${nbrParticipantsValue}</p>
+            <p><strong>Total à payer : </strong>${totalPrice.toFixed(2)} €</p>
         `;
 
+        // Ajouter les informations des participants
         this.participantList.querySelectorAll('li').forEach((li, index) => {
-            const name = li.querySelector('input[name*="[name]"]').value;
-            const email = li.querySelector('input[name*="[email]"]').value;
+            const name = li.querySelector('input[name*="[name]"]')?.value || '';
+            const email = li.querySelector('input[name*="[email]"]')?.value || '';
             recapContent += `<p><strong>Participant ${index + 1} : </strong> ${name}, ${email}</p>`;
         });
 
@@ -367,25 +381,25 @@ class BookingFormManager {
             method: 'POST',
             body: formData,
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                fetch(`/create-checkout-session/${data.invoiceId}`)
-                    .then(response => response.json())
-                    .then(session => {
-                        if (session.error) {
-                            alert(session.error);
-                        } else {
-                            const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE');
-                            stripe.redirectToCheckout({ sessionId: session.id });
-                        }
-                    })
-                    .catch(error => console.warn('Erreur lors de la création de la session Stripe:', error));
-            } else {
-                alert("Une erreur est survenue lors de la réservation.");
-            }
-        })
-        .catch(error => console.warn('Erreur lors de la soumission du formulaire:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    fetch(`/create-checkout-session/${data.invoiceId}`)
+                        .then(response => response.json())
+                        .then(session => {
+                            if (session.error) {
+                                alert(session.error);
+                            } else {
+                                const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE');
+                                stripe.redirectToCheckout({ sessionId: session.id });
+                            }
+                        })
+                        .catch(error => console.warn('Erreur lors de la création de la session Stripe:', error));
+                } else {
+                    alert("Une erreur est survenue lors de la réservation.");
+                }
+            })
+            .catch(error => console.warn('Erreur lors de la soumission du formulaire:', error));
     }
 
     // Gérer la modification depuis le récapitulatif
