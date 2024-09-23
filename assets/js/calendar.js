@@ -338,6 +338,7 @@ class BookingFormManager {
     showRecapModal() {
         const productText = this.productField.options[this.productField.selectedIndex].text;
         const nbrParticipantsValue = this.nbrParticipantField.value;
+        console.log(nbrParticipantsValue);
 
         let recapContent = `
             <p><strong>Produit : </strong>${productText}</p>

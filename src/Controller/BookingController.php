@@ -65,7 +65,7 @@ class BookingController extends AbstractController
             ];
         }
         $productPricesJson = json_encode($productPrices);
-
+        
         $date = $request->query->get('date'); // Récupère la date passée en paramètre
         $booking = new Booking(); // Crée une nouvelle réservation
         $dateTime = new \DateTime($date); // Convertit la date en objet DateTime
