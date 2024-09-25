@@ -32,7 +32,7 @@ class BookingType extends AbstractType
                 'label' => 'Sélectionnez une période',
             ])
             ->add('nbrParticipant', IntegerType::class, [
-                'label' => 'Nombre de participants (min 6)',
+                'label' => 'Nombre de participants y compris vous (min 6)',
                 'required' => true,
                 'attr' => [
                     'min' => 6,

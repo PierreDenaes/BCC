@@ -16,12 +16,19 @@
             {{ form_row(form.nbrParticipant, {'attr': {'id': 'booking_nbrParticipant'}}) }}
         </div>
 
+        <div class="mb-3 fw-bold">
+            <h2>Participant Organisateur</h2>
+            <p>Recru : {{ app.user.profile.name }} {{ app.user.profile.firstname }}.</p>
+            <p>Contact : {{ app.user.email }}</p>
+        </div>
+
         <div class="mb-3" id="participantsContainer" 
             data-product-prices='{{ productPricesJson|raw }}'
              data-user-name="{{ app.user.profile.name }}" 
              data-user-firstname="{{ app.user.profile.firstname }}"  
              data-user-email="{{ app.user.email }}">
-
+            <h3>Participants</h3>
+            <p>Veuillez inscrire le nom, prénom des autres participant ainsi qu'un email de contact pour transmission des informations</p>
             <ul id="participant-list" 
                 data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
 
