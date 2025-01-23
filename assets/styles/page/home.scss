@@ -44,21 +44,38 @@
 .swiper-pagination {
     position: static;
 }
-@keyframes changeBackground {
-  0% {
-    background: url('../../img/bootW-min.jpg') no-repeat top center;
-    background-color: #fff;
-  }
-  100% {
-    background: url('../../img/bootB-min.jpg') no-repeat top center;
-    background-color: #000;
-  }
-}
+
+// #home {
+//     background-color: #fff;
+//     animation: changeBackgroundColor ease-in-out 2s forwards ;
+//     height: 100vh;
+//   }
 #home {
-    background: url('../../img/bootW-min.jpg') no-repeat top center;
-    animation: changeBackground 2s forwards 2s;
-  }
-  
+  background-color: #fff;
+  animation: changeBackgroundColor ease-in-out 2s forwards;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#home img {
+  max-width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+}
+.transition-image {
+  transition: opacity 400ms ease-in-out; /* Transition pour un fondu */
+  opacity: 1; /* Par défaut visible */
+}
+
+.transition-image.hidden {
+  opacity: 0; /* Disparition avant le changement */
+}
+
   .textAccueil {
     color: #fff;
     text-align: justify;
@@ -112,14 +129,14 @@
   }
   
   .arrow-container {
-    position: relative;
-    top: 75%;
+    position: absolute;
+    top:90%;
     .arrow {
       display: inline-block;
       font-size: 60px;
       font-weight: bold;
       color: #000;
-      animation: bounce 2s infinite;
+      animation: bounce 2s infinite, changeColor 2s forwards;
     }
   }
   @keyframes bounceLeftRight {
@@ -135,9 +152,18 @@
       color: #fff; /* Couleur cible */
     }
   }
-  .clicMenu{
-    animation: bounceLeftRight 2s infinite, changeColor 2s ease-in-out 2s forwards;
+  @keyframes changeBackgroundColor {
+    to {
+      background-color: #000;
+    }
   }
+  .clicMenu{
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    animation: bounceLeftRight 2s infinite, changeColor 2s forwards;
+  }
+  
   #calendarIndex {
     height: 500px;
     overflow-y: scroll;
@@ -187,11 +213,14 @@
     }
     #home {
       padding-left: 40px;
-      background-size: 90%;
-      background-color: #000;
-      background-position: center right;
+    
+
     }
-    .arrow-container {
-      top: 80%;
+    .clicMenu{
+      left: 8%; 
     }
+    .welcome {
+      text-align: justify !important;
+    }
+    
   }

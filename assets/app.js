@@ -1,4 +1,4 @@
-import 'bootstrap';
+import * as bootstrap from 'bootstrap';
 import 'lineicons/dist/lineicons.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './styles/app.scss';
@@ -30,4 +30,7 @@ window.addEventListener('scroll', function() {
         footer.classList.remove('footer-normal');
     }
 });
-
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})

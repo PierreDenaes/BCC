@@ -41,7 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     initializeCalendar();
+ 
+    const image = document.querySelector('.transition-image'); // Sélectionne l'image
 
+    setTimeout(() => {
+        image.classList.add('hidden'); // Débute le fondu de disparition
+        setTimeout(() => {
+            image.src = "images/site/logo-blanc-bootcamp.webp"; // Change l'URL de l'image
+            image.classList.remove('hidden'); // Réapparaît avec la nouvelle image
+        }, 400); // Délai pour laisser le fondu disparaître
+    }, 1000); // Délai initial avant de changer l'image
 });
 document.querySelector('.arrow').addEventListener('click', function(event) {
     event.preventDefault();
