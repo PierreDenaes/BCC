@@ -44,77 +44,105 @@
 .swiper-pagination {
     position: static;
 }
-
+@keyframes changeBackground {
+  0% {
+    background: url('../../img/bootW-min.jpg') no-repeat top center;
+    background-color: #fff;
+  }
+  100% {
+    background: url('../../img/bootB-min.jpg') no-repeat top center;
+    background-color: #000;
+  }
+}
 #home {
-    background-image: url('../../img/logoBlanc-min.png');
-    background-repeat: no-repeat;
-    background-position: top center;
-}
-
-.textAccueil {
+    background: url('../../img/bootW-min.jpg') no-repeat top center;
+    animation: changeBackground 2s forwards 2s;
+  }
+  
+  .textAccueil {
     color: #fff;
-    text-align: jUstify;
-    font-family: metropolian;
+    text-align: justify;
+    font-family: 'Metropolian', sans-serif;
     font-size: 15px;
-    font-style: normal;
     font-weight: 800;
-    line-height: normal;
     letter-spacing: 0.84px;
-}
-
-#accueil {
+  }
+  
+  #accueil {
     max-width: 800px;
     padding: 2rem;
-    background-color: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.6);
     border-radius: 10px;
     text-align: center;
     margin: 0 auto;
-}
-
-.img-fluid {
+  }
+  
+  .img-fluid {
     width: 100%;
-}
-h1,h2,h3,.nba-font {
-    font-family: 'Nba-kings' !important;
-}
-#smartHomeView{
+  }
+  
+  h1, h2, h3, .nba-font {
+    font-family: 'Nba-kings', sans-serif !important;
+  }
+  
+  #smartHomeView {
     display: none;
-}
-
-#accueilInstructor{
-    border-top:  10px ridge darken(#428bca, 20%);
-    background :url('../../img/backgroundInst-min.png') no-repeat center bottom fixed,  url('../../img/pngegg.png') no-repeat top right;
-    background-size:contain, 320px;
-    background-color: rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.6);
+  }
+  
+  #accueilInstructor {
+    border-top: 10px ridge darken(#428bca, 20%);
+    background: 
+      url('../../img/backgroundInst-min.png') no-repeat center bottom fixed, 
+      url('../../img/pngegg.png') no-repeat top right;
+    background-size: contain, 320px;
+    background-color: rgba(255, 255, 255, 0.6);
     text-align: justify;
-    border-bottom:  10px ridge darken(#428bca, 20%);
     min-height: 100vh;
-}
-#moussa{
-    text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
-
-}
-.white-stroke{
-    text-shadow: #fff 1px 1px, #fff -1px 1px, #fff -1px -1px, #fff 1px -1px;
+  }
+  #regle{
+    border-bottom: 10px ridge darken(#428bca, 20%);
+  }
+  #moussa {
+    text-shadow: 1px 1px #000, -1px 1px #000, -1px -1px #000, 1px -1px #000;
+  }
+  
+  .white-stroke {
+    text-shadow: 1px 1px #fff, -1px 1px #fff, -1px -1px #fff, 1px -1px #fff;
     letter-spacing: 1px;
-}
-.arrow-container {
+  }
+  
+  .arrow-container {
     position: relative;
-    top:75%;
-     // Ajuste cette valeur selon la distance que tu veux entre le logo et la flèche
-    
+    top: 75%;
     .arrow {
       display: inline-block;
       font-size: 60px;
-      font-weight: bold; // Taille de la flèche
+      font-weight: bold;
       color: #000;
       animation: bounce 2s infinite;
     }
   }
+  @keyframes bounceLeftRight {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(20px);
+    }
+  }
+  @keyframes changeColor {
+    to {
+      color: #fff; /* Couleur cible */
+    }
+  }
+  .clicMenu{
+    animation: bounceLeftRight 2s infinite, changeColor 2s ease-in-out 2s forwards;
+  }
   #calendarIndex {
     height: 500px;
-    overflow: scrollY;
+    overflow-y: scroll;
   }
+  
   @keyframes bounce {
     0%, 100% {
       transform: translateY(0);
@@ -123,43 +151,47 @@ h1,h2,h3,.nba-font {
       transform: translateY(-10px);
     }
   }
+  
   #next-section {
-    height: 800px; // Hauteur de la section suivante pour démonstration
+    height: 800px;
     background-color: #f0f0f0;
     padding-top: 50px;
   }
-.avatar{
+  
+  .avatar {
     width: 500px;
-}
-.product-view{
+  }
+  
+  .product-view {
     padding-bottom: 96px;
-}
-@media screen and (max-width: 1439px) {
-    #desktopHomeView{
-        display: none;
+  }
+  
+  @media screen and (max-width: 1439px) {
+    #desktopHomeView {
+      display: none;
     }
-    #smartHomeView{
-        display: block;
+    #smartHomeView {
+      display: block;
     }
-    .avatar{
-        width: 100%;
+    .avatar {
+      width: 100%;
     }
-}
-@media screen and (max-width: 767px) {
-    h1,h2{
-        font-size: 1.5rem !important;
+  }
+  
+  @media screen and (max-width: 767px) {
+    h1, h2 {
+      font-size: 1.5rem !important;
     }
-    p{
-        font-size: .9rem !important;
+    p {
+      font-size: 0.9rem !important;
     }
-    
     #home {
-        padding-left: 40px;
-        background-size: 90%;
-        background-color: #000;
-        background-position: center right;
+      padding-left: 40px;
+      background-size: 90%;
+      background-color: #000;
+      background-position: center right;
     }
     .arrow-container {
-        top: 80%;
+      top: 80%;
     }
-}
+  }
