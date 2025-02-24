@@ -67,14 +67,14 @@ class Profile
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'profile')]
     private Collection $bookings;
 
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'recipient', cascade: ['remove'])]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
-
-    
-
-    
 
     public function getId(): ?int
     {
@@ -269,6 +269,8 @@ class Profile
     {
         return $this->name . ' ' . $this->firstname;
     }
-
-    
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
 }

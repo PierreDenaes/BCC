@@ -1,39 +1,5 @@
-#footer {
-    width:100%;
-}
-.footer {
-    //position: fixed;
-   // bottom: 0;
-    padding-right: 70px;
-    padding-left: 70px;
-   // left: 70px;
-    //z-index: 1000;
-    background-color: rgba(15, 16, 17, 0.9);
-}
-.footerPageLink a {
-    padding-right: 15px;
-}
 
-.footerSocialLink a {
-    font-size: 1.5rem;
-    padding-right: 20px;
-}
-/* Media query pour les écrans de plus de 1200px */
-@media screen and (min-width: 1201px) {
-    .footer-normal {
-        //position: static !important; /* Désactiver la position fixed uniquement pour les écrans de plus de 1200px */
-        background-color: rgba(15, 16, 17, 0.9);
-        padding-left: 140px !important;
-    }
-}
-/* Media query pour les écrans de 1200px ou moins */
-@media screen and (max-width: 1200px) {
-    .footer {
-        //position: static;
-        background-color: rgba(15, 16, 17, 0.9);
-        margin-left: 0;
-        margin-right: 0;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+.footer {
+
+    background-color: rgba(15, 16, 17, 0.9);
 }
