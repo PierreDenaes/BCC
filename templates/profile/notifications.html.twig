@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Notifications
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('profile') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('profile') }}
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid">
+		<div class="wrapper d-flex align-items-stretch row gx-0 pe-4">
+
+			{% include 'profile/_sidebar.html.twig' %}
+
+			<div id="dynamicContent" class="p-4 p-md-5 mt-4 border col-9">
+				<h2 class="mb-3">📩 Mes Notifications</h2>
+
+				{% for notification in notifications %}
+					<div class="alert {{ notification.isRead ? 'alert-secondary' : 'alert-info' }}">
+						<strong>{{ notification.title }}</strong>
+						<p>{{ notification.message }}</p>
+						<small class="text-muted">Reçu le
+							{{ notification.createdAt|date('d/m/Y H:i') }}</small>
+
+						{% if not notification.isRead %}
+							<form method="post" class="mt-2">
+								<input type="hidden" name="notification_id" value="{{ notification.id }}">
+								<button type="submit" class="btn btn-sm btn-warning text-white">Marquer comme lu</button>
+							</form>
+						{% endif %}
+						<form method="post" action="{{ path('profile_delete_notification', {id: notification.id}) }}" class="d-inline" onsubmit="return confirm('Es-tu sûr de vouloir supprimer cette notification ?');">
+							<button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+						</form>
+					</div>
+				{% else %}
+					<p>Aucune notification pour le moment.</p>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

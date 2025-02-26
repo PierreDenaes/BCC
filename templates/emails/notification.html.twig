@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Notification Bootcamp</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .email-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .email-body {
+            padding: 20px;
+            color: #333;
+        }
+        .email-body p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            color: white;
+            margin: 5px;
+        }
+        .button-view {
+            background-color: #007bff;
+        }
+        .button-reply {
+            background-color: #28a745;
+        }
+        .button-contact {
+            background-color: #e67e22;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            📢 Nouvelle Notification Bootcamp
+        </div>
+        <div class="email-body">
+            <p>Bonjour {{ recipient.firstname }},</p>
+            <p>{{ notification.message }}</p>
+
+            <div class="button-container">
+                <a href="#" class="button button-view">🔍 Voir la notification</a>
+                <a href="#" class="button button-reply">✉️ Répondre</a>
+                <a href="#" class="button button-contact">👤 Contacter l’admin</a>
+            </div>
+        </div>
+        <div class="footer">
+            © 2025 BootcampPro - Tous droits réservés
+        </div>
+    </div>
+</body>
+</html>

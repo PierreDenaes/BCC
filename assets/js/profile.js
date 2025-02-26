@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const isCompanyCheckbox = document.getElementById('profile_isCompany');
     const companyNameField = document.getElementById('profile_companyName').closest('.mb-3');
     const siretNumberField = document.getElementById('profile_siretNumber').closest('.mb-3');
+    
 
     function toggleCompanyFields() {
         if (isCompanyCheckbox.checked) {

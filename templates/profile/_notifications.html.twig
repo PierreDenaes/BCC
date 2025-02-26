@@ -1,0 +1,12 @@
+{% for notification in notifications %}
+    <div class="alert alert-info">
+        <strong>{{ notification.title }}</strong><br>
+        {{ notification.message }}
+        <small class="text-muted d-block mt-2">Reçu le {{ notification.createdAt|date('d/m/Y H:i') }}</small>
+        <a href="{{ path('app_profile_notification_read', {'id': notification.id}) }}" class="btn btn-sm btn-primary">
+            Marquer comme lu
+        </a>
+    </div>
+{% else %}
+    <p>Aucune notification disponible.</p>
+{% endfor %}

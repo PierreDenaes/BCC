@@ -1,0 +1,61 @@
+<nav id="sidebarUser" class="col-3">
+    <div class="p-4">
+        <div class="mb-5">
+            <div class="card" id="profile-display">
+                <div class="card-header text-center p-5">
+                    <a href="{{ path('app_profile') }}" class="img logo rounded-circle mb-5">
+                        <img class="img-fluid" src="{{ asset('images/avatars/' ~ profile.avatarName) }}" alt="Avatar de {{ profile.name }}" style="border: 2px solid #000; border-radius: 50%;"/>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <p class="card-text">
+                            <strong>Prénom :</strong>
+                            {{ profile.firstname }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="card-text">
+                            <strong>Nom :</strong>
+                            {{ profile.name }}</p>
+                    </div>
+                    <div class="mb-3">
+                        {% if profile.isCompany %}
+                            <p>Entreprise: {{ profile.companyName }}</p>
+                            <p>SIRET: {{ profile.siretNumber }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <p class="card-text">
+                            <strong>Adresse de facturation :</strong>
+                            {{ profile.billingAddress }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="card-text">
+                            <strong>Ville :</strong>
+                            {{ profile.zipCode }} - {{ profile.billingCity }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="card-text">
+                            <strong>Téléphone :</strong>
+                            {{ profile.phoneNumber }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <a href="{{ path('book') }}" id="bookProfile" class="btn btn-blueboot">Réserver bootcamps</a>
+                    </div>
+                    <div class="mb-3">
+                        <a href="{{ path('app_profile_edit') }}" id="editProfileButton" class="btn btn-blueboot">Éditer le profil</a>
+                    </div>
+                    <div class="mb-3">
+                        <a href="{{ path('app_profile_notifications') }}" class="btn btn-blueboot">
+                            🔔 Voir mes notifications ({{ unreadNotifications }})
+                        </a>
+                    </div>
+                    <form method="post" action="{{ path('app_profile_delete') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil ?');" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ profile.id) }}">
+                        <button class="btn btn-danger text-white">Supprimer mon compte</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

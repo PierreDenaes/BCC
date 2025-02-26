@@ -4,8 +4,8 @@ namespace App\EventListener;
 
 use App\Event\NotificationCreatedEvent;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class NotificationListener
 {
@@ -28,13 +28,16 @@ class NotificationListener
 
         $email = $recipient->getIdUser()->getEmail();
 
-        // Création de l'email avec le message et le titre
-        $emailMessage = (new Email())
+        // Création de l'email en utilisant le template Twig
+        $emailMessage = (new TemplatedEmail())
             ->from(new Address('photostudio13000@gmail.com', 'Bootcamp Admin')) // 📌 Remplace avec ton email
             ->to(new Address($email))
             ->subject($notification->getTitle())
-            ->text($notification->getMessage())
-            ->html('<p>' . nl2br($notification->getMessage()) . '</p>'); // Convertit les sauts de ligne
+            ->htmlTemplate('emails/notification.html.twig') // Utilisation du template Twig
+            ->context([
+                'notification' => $notification,
+                'recipient' => $recipient,
+            ]);
 
         // Vérifie si une pièce jointe existe et l'ajoute
         $attachmentPath = $notification->getPdfPath();
