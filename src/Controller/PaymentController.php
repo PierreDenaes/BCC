@@ -20,8 +20,8 @@ use Symfony\Component\Mime\Email;
 
 class PaymentController extends AbstractController
 {
-    private $logger;
-    private $mailer;
+    private MailerInterface $mailer;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger, MailerInterface $mailer)
     {
