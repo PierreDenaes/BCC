@@ -41,9 +41,11 @@ class Booking
     #[ORM\Column]
     private ?bool $isPaid = false;
 
-    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: Invoice::class, mappedBy: 'booking', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Invoice $invoice = null;
 
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'booking', cascade: ['remove'], orphanRemoval: true)]
+    private Collection $notifications;
     #[ORM\Column]
     private ?int $nbrParticipant = null;
 
@@ -51,6 +53,7 @@ class Booking
     {
         $this->createdAt = new \DateTime();
         $this->participants = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,5 +192,35 @@ class Booking
         $this->nbrParticipant = $nbrParticipant;
 
         return $this;
+    }
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setBooking($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // Set the owning side to null (unless already changed)
+            if ($notification->getBooking() === $this) {
+                $notification->setBooking(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->bookAt->format('d/m/Y') . ' - ' . $this->product . ' - ' . $this->profile;
     }
 }

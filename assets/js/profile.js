@@ -1,3 +1,4 @@
+import '../styles/page/profile.scss';
 document.addEventListener('DOMContentLoaded', function () {
     const isCompanyCheckbox = document.getElementById('profile_isCompany');
     const companyNameInput = document.getElementById('profile_companyName');

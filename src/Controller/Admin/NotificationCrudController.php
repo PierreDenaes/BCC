@@ -3,17 +3,18 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Notification;
+use App\Repository\BookingRepository;
 use App\Event\NotificationCreatedEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use Vich\UploaderBundle\Form\Type\VichFileType;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Vich\UploaderBundle\Form\Type\VichFileType;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class NotificationCrudController extends AbstractCrudController
 {
@@ -35,8 +36,13 @@ class NotificationCrudController extends AbstractCrudController
             FormField::addPanel('Détails de la notification'),
             TextField::new('title', 'Titre'),
             TextareaField::new('message', 'Message'),
-            AssociationField::new('recipient', 'Destinataire')
-                ->setRequired(true),
+            // 🔹 Champ Booking lié au profil sélectionné
+            AssociationField::new('booking', 'Réservation concernée')
+                ->setRequired(false)
+                ->setQueryBuilder(function ($qb) {
+                    $alias = $qb->getRootAliases()[0]; // Récupérer l'alias principal de l'entité
+                    return $qb->orderBy($alias . '.createdAt', 'DESC');
+                }),
             BooleanField::new('isRead', 'Lu'),
             DateTimeField::new('createdAt', 'Créé le')
                 ->hideOnForm(),
@@ -66,7 +72,6 @@ class NotificationCrudController extends AbstractCrudController
         // Dispatch l'événement pour l'envoi d'un email
         $event = new NotificationCreatedEvent($entityInstance);
         $this->eventDispatcher->dispatch($event, NotificationCreatedEvent::NAME);
-        
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void

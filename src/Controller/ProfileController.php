@@ -40,8 +40,13 @@ class ProfileController extends AbstractController
         }
 
         // 🔔 Ajout du compteur de notifications non lues
-        $unreadNotifications = $em->getRepository(Notification::class)
-            ->count(['recipient' => $profile, 'isRead' => false]);
+        $bookings = $profile->getBookings();
+        $unreadNotifications = 0;
+
+        foreach ($bookings as $booking) {
+            $unreadNotifications += $em->getRepository(Notification::class)
+                ->count(['booking' => $booking, 'isRead' => false]);
+        }
 
         return $this->render('profile/index.html.twig', [
             'profile' => $profile,
@@ -66,8 +71,12 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
         // 🔔 Ajout du compteur de notifications non lues
-        $unreadNotifications = $em->getRepository(Notification::class)
-            ->count(['recipient' => $profile, 'isRead' => false]);
+        $unreadNotifications = 0;
+
+        foreach ($profile->getBookings() as $booking) {
+            $unreadNotifications += $em->getRepository(Notification::class)
+                ->count(['booking' => $booking, 'isRead' => false]);
+        }
         return $this->render('profile/edit.html.twig', [
             'form' => $form->createView(),
             'profile' => $profile,
@@ -91,13 +100,19 @@ class ProfileController extends AbstractController
     public function notifications(Request $request, EntityManagerInterface $em, UserInterface $user): Response
     {
         $profile = $user->getProfile();
-
         if (!$profile) {
             return $this->redirectToRoute('app_profile_new');
         }
 
-        $notifications = $em->getRepository(Notification::class)
-            ->findBy(['recipient' => $profile], ['createdAt' => 'DESC']);
+        // Récupérer les réservations du profil
+        $bookings = $profile->getBookings();
+        $notifications = [];
+
+        foreach ($bookings as $booking) {
+            $bookingNotifications = $em->getRepository(Notification::class)
+                ->findBy(['booking' => $booking], ['createdAt' => 'DESC']);
+            $notifications = array_merge($notifications, $bookingNotifications);
+        }
 
         if ($request->isMethod('POST')) {
             $notificationId = $request->request->get('notification_id');
@@ -105,7 +120,7 @@ class ProfileController extends AbstractController
             if ($notificationId) {
                 $notification = $em->getRepository(Notification::class)->find($notificationId);
 
-                if ($notification && $notification->getRecipient() === $profile && !$notification->isRead()) {
+                if ($notification && in_array($notification->getBooking(), $bookings->toArray(), true) && !$notification->isRead()) {
                     $notification->setIsRead(true);
                     $em->flush();
                 }
@@ -113,27 +128,36 @@ class ProfileController extends AbstractController
 
             return $this->redirectToRoute('app_profile_notifications');
         }
-        // 🔔 Ajout du compteur de notifications non lues
-        $unreadNotifications = $em->getRepository(Notification::class)
-            ->count(['recipient' => $profile, 'isRead' => false]);
+
+        // 🔔 Compter les notifications non lues
+        $unreadNotifications = 0;
+        foreach ($bookings as $booking) {
+            $unreadNotifications += $em->getRepository(Notification::class)
+                ->count(['booking' => $booking, 'isRead' => false]);
+        }
+
         return $this->render('profile/notifications.html.twig', [
             'profile' => $profile,
             'notifications' => $notifications,
             'unreadNotifications' => $unreadNotifications,
         ]);
     }
+
     #[Route('/profile/notification/read/{id}', name: 'app_profile_notification_read')]
     public function markNotificationAsRead(int $id, EntityManagerInterface $em, UserInterface $user): Response
     {
         $profile = $user->getProfile();
-
         if (!$profile) {
             throw $this->createAccessDeniedException("Vous devez avoir un profil pour voir vos notifications.");
         }
 
         $notification = $em->getRepository(Notification::class)->find($id);
+        if (!$notification) {
+            throw $this->createNotFoundException("Notification introuvable.");
+        }
 
-        if (!$notification || $notification->getRecipient() !== $profile) {
+        $bookings = $profile->getBookings();
+        if (!in_array($notification->getBooking(), $bookings->toArray(), true)) {
             throw $this->createNotFoundException("Notification introuvable.");
         }
 
@@ -141,6 +165,71 @@ class ProfileController extends AbstractController
             $notification->setIsRead(true);
             $em->flush();
         }
+
+        return $this->redirectToRoute('app_profile_notifications');
+    }
+
+    #[Route('/profile/notifications/mark-all-read', name: 'profile_mark_all_read', methods: ['POST'])]
+    public function markAllNotificationsRead(EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $security->getUser();
+
+        if (!$user || !$user->getProfile()) {
+            throw $this->createAccessDeniedException("Tu dois être connecté pour effectuer cette action.");
+        }
+
+        $profile = $user->getProfile();
+
+        // Récupérer les réservations du profil
+        $bookings = $profile->getBookings();
+
+        if ($bookings->isEmpty()) {
+            $this->addFlash('info', 'Aucune notification à marquer comme lue.');
+            return $this->redirectToRoute('app_profile_notifications');
+        }
+
+        // Récupérer les notifications liées aux réservations
+        $notifications = $entityManager->getRepository(Notification::class)->createQueryBuilder('n')
+            ->where('n.booking IN (:bookings)')
+            ->andWhere('n.isRead = false')
+            ->setParameter('bookings', $bookings)
+            ->getQuery()
+            ->getResult();
+
+        if (empty($notifications)) {
+            $this->addFlash('info', 'Aucune notification non lue.');
+            return $this->redirectToRoute('app_profile_notifications');
+        }
+
+        // Marquer les notifications comme lues
+        foreach ($notifications as $notification) {
+            $notification->setIsRead(true);
+        }
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Toutes les notifications ont été marquées comme lues.');
+
+        return $this->redirectToRoute('app_profile_notifications');
+    }
+    #[Route('/profile/notification/delete/{id}', name: 'profile_delete_notification', methods: ['POST'])]
+    public function deleteNotification(Notification $notification, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $security->getUser();
+        $profile = $user->getProfile();
+        if (!$profile) {
+            throw $this->createAccessDeniedException("Vous devez avoir un profil pour supprimer une notification.");
+        }
+
+        $bookings = $profile->getBookings();
+        if (!in_array($notification->getBooking(), $bookings->toArray(), true)) {
+            throw $this->createAccessDeniedException("Tu n'as pas le droit de supprimer cette notification.");
+        }
+
+        $entityManager->remove($notification);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Notification supprimée avec succès.');
 
         return $this->redirectToRoute('app_profile_notifications');
     }
@@ -153,27 +242,18 @@ class ProfileController extends AbstractController
             return $this->json(['error' => 'Profil introuvable'], Response::HTTP_FORBIDDEN);
         }
 
-        $notifications = $em->getRepository(Notification::class)
-            ->findBy(['recipient' => $profile], ['createdAt' => 'DESC']);
+        // Récupérer toutes les notifications via les bookings liés au profil
+        $bookings = $profile->getBookings();
+        $notifications = [];
+
+        foreach ($bookings as $booking) {
+            $bookingNotifications = $em->getRepository(Notification::class)
+                ->findBy(['booking' => $booking], ['createdAt' => 'DESC']);
+            $notifications = array_merge($notifications, $bookingNotifications);
+        }
 
         return $this->render('profile/_notifications.html.twig', [
             'notifications' => $notifications
         ]);
-    }
-    #[Route('/profile/notification/delete/{id}', name: 'profile_delete_notification', methods: ['POST'])]
-    public function deleteNotification(Notification $notification, EntityManagerInterface $entityManager, Security $security): Response
-    {
-        // Vérifier que l'utilisateur est bien le propriétaire de la notification
-        $user = $security->getUser();
-        if ($notification->getRecipient()->getIdUser() !== $user) {
-            throw $this->createAccessDeniedException("Tu n'as pas le droit de supprimer cette notification.");
-        }
-
-        $entityManager->remove($notification);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Notification supprimée avec succès.');
-
-        return $this->redirectToRoute('app_profile_notifications');
     }
 }

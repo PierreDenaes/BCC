@@ -19,16 +19,19 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-		<div class="wrapper d-flex align-items-stretch row gx-0 pe-4">
-			{% include 'profile/_sidebar.html.twig' %}
+    <div class="container-fluid min-vh-100">
+        <div class="row p-4">
+			<!-- Sidebar toujours visible, pleine largeur sur mobile -->
+            <div class="col-12 col-lg-3 mb-3">
+                {% include 'profile/_sidebar.html.twig' %}
+            </div>
 
 
 			<!-- Page Content  -->
 
 
 			<!-- ... le reste de votre code ... -->
-			<div id="dynamicContent" class="p-4 p-md-5 mt-4 border col-9">
+			<div id="dynamicContent" class="col-12 col-lg-9 p-4 p-md-5 border shadow">
                 <h1 class="text-center mb-4">Modifier le Profil</h1>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8 col-lg-6">

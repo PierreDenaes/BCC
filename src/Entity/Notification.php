@@ -25,9 +25,9 @@ class Notification
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\ManyToOne(targetEntity: Profile::class, inversedBy: 'notifications')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Profile $recipient = null;
+    #[ORM\ManyToOne(targetEntity: Booking::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Booking $booking = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isRead = false;
@@ -80,13 +80,7 @@ class Notification
 
     public function getRecipient(): ?Profile
     {
-        return $this->recipient;
-    }
-
-    public function setRecipient(?Profile $recipient): static
-    {
-        $this->recipient = $recipient;
-        return $this;
+        return $this->booking ? $this->booking->getProfile() : null;
     }
 
     public function isRead(): bool
@@ -123,9 +117,19 @@ class Notification
             $this->createdAt = new \DateTimeImmutable();
         }
     }
+    public function getBooking(): ?Booking
+    {
+        return $this->booking;
+    }
+
+    public function setBooking(?Booking $booking): static
+    {
+        $this->booking = $booking;
+        return $this;
+    }
     public function __sleep()
     {
-        return ['id', 'title', 'message', 'createdAt', 'recipient', 'isRead', 'pdfFilename']; // Exclut pdfFile
+        return ['id', 'title', 'message', 'createdAt','booking', 'isRead', 'pdfFilename']; // Exclut pdfFile
     }
 
     public function __wakeup()
