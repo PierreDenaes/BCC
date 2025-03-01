@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}📄 Détails de la Réservation{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('profile') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('profile') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid min-vh-100">
+        <div class="row p-4">
+            <!-- Sidebar -->
+            <div class="col-12 col-lg-3 mb-3">
+                {% include 'profile/_sidebar.html.twig' %}
+            </div>
+
+            <!-- Contenu principal -->
+            <div id="dynamicContent" class="col-12 col-lg-9 p-4 p-md-5 border shadow">
+                <h2 class="mb-3">📄 Détails de la Réservation</h2>
+
+                <div class="card shadow-sm p-4">
+                    <h3>{{ booking.product.forfait }}</h3>
+                    <p><strong>Date de réservation :</strong> {{ booking.createdAt|date('d/m/Y H:i') }}</p>
+                    
+                    <h4>📌 Participants</h4>
+                    <ul>
+                        {% for participant in booking.participants %}
+                            <li>{{ participant.fullName ?? 'Inconnu' }} - {{ participant.email ?? 'Email non renseigné' }}</li>
+                        {% else %}
+                            <li class="text-muted">Aucun participant enregistré</li>
+                        {% endfor %}
+                    </ul>
+
+                    <h4>💰 Paiement</h4>
+                    <p>
+                        {% if booking.isPaid %}
+                            <span class="badge bg-success">✅ Payé</span>
+                        {% else %}
+                            <span class="badge bg-warning">❌ Non payé</span>
+                        {% endif %}
+                    </p>
+
+                    <a href="{{ path('app_profile_bookings') }}" class="btn btn-primary mt-3">⬅ Retour à mes réservations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,53 +1,64 @@
 <nav id="sidebarUser">
 
-        <div class="mb-5">
-            <div class="card shadow border-0" id="profile-display" style="background: #f8f9fa;">
-                <div class="card-header text-center p-4 bg-white">
-                    <a href="{{ path('app_profile') }}" class="img logo rounded-circle mb-3 d-block">
-                        <img class="img-fluid border border-dark rounded-circle" 
-                             src="{{ asset('images/avatars/' ~ profile.avatarName) }}" 
-                             alt="Avatar de {{ profile.name }}" 
-                             style="width: 100px; height: 100px; object-fit: cover;"/>
-                    </a>
-                    <h5 class="fw-bold">{{ profile.firstname }} {{ profile.name }}</h5>
-                    {% if profile.isCompany %}
-                        <small class="text-muted">🏢 {{ profile.companyName }} (SIRET: {{ profile.siretNumber }})</small>
-                    {% endif %}
-                </div>
+	<div class="mb-5">
+		<div class="card shadow border-0" id="profile-display" style="background: #f8f9fa;">
+			<div class="card-header text-center p-4 bg-white">
+				<a href="{{ path('app_profile') }}" class="img logo rounded-circle mb-3 d-block">
+					<img class="img-fluid border border-dark rounded-circle" src="{{ asset('images/avatars/' ~ profile.avatarName) }}" alt="Avatar de {{ profile.name }}" style="width: 100px; height: 100px; object-fit: cover;"/>
+				</a>
+				<h5 class="fw-bold">{{ profile.firstname }}
+					{{ profile.name }}</h5>
+				{% if profile.isCompany %}
+					<small class="text-muted">🏢
+						{{ profile.companyName }}
+						(SIRET:
+						{{ profile.siretNumber }})</small>
+				{% endif %}
+			</div>
 
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>📍 Adresse :</strong> {{ profile.billingAddress }}</li>
-                        <li class="list-group-item"><strong>🏙️ Ville :</strong> {{ profile.zipCode }} - {{ profile.billingCity }}</li>
-                        <li class="list-group-item"><strong>📞 Téléphone :</strong> {{ profile.phoneNumber }}</li>
-                    </ul>
+			<div class="card-body">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<strong>📍 Adresse :</strong>
+						{{ profile.billingAddress }}</li>
+					<li class="list-group-item">
+						<strong>🏙️ Ville :</strong>
+						{{ profile.zipCode }}
+						-
+						{{ profile.billingCity }}</li>
+					<li class="list-group-item">
+						<strong>📞 Téléphone :</strong>
+						{{ profile.phoneNumber }}</li>
+				</ul>
 
-                    <div class="mt-4 d-grid gap-2">
-                        <a href="{{ path('book') }}" id="bookProfile" class="btn btn-primary">
-                            📅 Réserver un bootcamp
-                        </a>
-                        <a href="{{ path('app_profile_edit') }}" id="editProfileButton" class="btn btn-outline-primary">
-                            ✏️ Éditer le profil
-                        </a>
-                        <a href="{{ path('app_profile_notifications') }}" class="btn btn-warning position-relative">
-                            🔔 Voir mes notifications 
-                            {% if unreadNotifications > 0 %}
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ unreadNotifications }}
-                                </span>
-                            {% endif %}
-                        </a>
-                    </div>
+				<div class="mt-4 d-grid gap-2">
+					<a href="{{ path('book') }}" id="bookProfile" class="btn btn-primary">
+						📅 Réserver un bootcamp
+					</a>
+					<a href="{{ path('app_profile_bookings') }}" class="btn btn-blueboot">
+						📅 Voir mes réservations
+					</a>
+					<a href="{{ path('app_profile_edit') }}" id="editProfileButton" class="btn btn-outline-primary">
+						✏️ Éditer le profil
+					</a>
+					<a href="{{ path('app_profile_notifications') }}" class="btn btn-warning position-relative">
+						🔔 Voir mes notifications
+						{% if unreadNotifications > 0 %}
+							<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+								{{ unreadNotifications }}
+							</span>
+						{% endif %}
+					</a>
+				</div>
 
-                    <div class="mt-3 text-center">
-                        <form method="post" action="{{ path('app_profile_delete') }}" 
-                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ profile.id) }}">
-                            <button class="btn btn-danger text-white w-100">❌ Supprimer mon compte</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+				<div class="mt-3 text-center">
+					<form method="post" action="{{ path('app_profile_delete') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil ?');">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ profile.id) }}">
+						<button class="btn btn-danger text-white w-100">❌ Supprimer mon compte</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </nav>

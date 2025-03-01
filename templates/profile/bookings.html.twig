@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}📅 Mes Réservations{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('profile') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('profile') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid min-vh-100">
+        <div class="row p-4">
+            <!-- Sidebar -->
+            <div class="col-12 col-lg-3 mb-3">
+                {% include 'profile/_sidebar.html.twig' %}
+            </div>
+
+            <!-- Contenu principal -->
+            <div id="dynamicContent" class="col-12 col-lg-9 p-4 p-md-5 border shadow">
+                <h2 class="mb-3">📅 Mes Réservations</h2>
+
+                {% if bookings is empty %}
+                    <p class="text-muted">😕 Aucune réservation pour le moment.</p>
+                {% else %}
+                    <table class="table table-striped shadow-sm">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Produit</th>
+                                <th>Date de réservation</th>
+                                <th>Participants</th>
+                                <th>Payée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>
+                                        <strong>{{ booking.product.forfait }}</strong><br>
+                                    </td>
+                                    <td>{{ booking.createdAt|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        <ul>
+                                            {% for participant in booking.participants %}
+                                                <li>
+                                                    {{ participant.fullName ?? 'Inconnu' }}
+                                                    {% if participant.email %}
+                                                        ({{ participant.email }})
+                                                    {% endif %}
+                                                </li>
+                                            {% else %}
+                                                <li class="text-muted">Aucun participant enregistré</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        {% if booking.isPaid %}
+                                            <span class="badge bg-success">Oui</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Non</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('app_booking_detail', {id: booking.id}) }}" class="btn btn-info btn-sm">📄 Détails</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

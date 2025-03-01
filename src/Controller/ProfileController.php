@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Booking;
 use App\Entity\Profile;
 use App\Form\ProfileType;
 use App\Entity\Notification;
@@ -95,6 +96,54 @@ class ProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('app_home');
+    }
+    #[Route('/profile/bookings', name: 'app_profile_bookings')]
+    public function bookings(EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $security->getUser();
+
+        if (!$user || !$user->getProfile()) {
+            throw $this->createAccessDeniedException("Tu dois être connecté pour voir tes réservations.");
+        }
+
+        $profile = $user->getProfile();
+
+        // Récupère les réservations associées au profil
+        $bookings = $entityManager->getRepository(Booking::class)->findBy([
+            'profile' => $profile
+        ], ['createdAt' => 'DESC']); // Tri des réservations par date de création
+
+        // 🔔 Ajout du compteur de notifications non lues
+        $unreadNotifications = 0;
+
+        foreach ($profile->getBookings() as $booking) {
+            $unreadNotifications += $entityManager->getRepository(Notification::class)
+                ->count(['booking' => $booking, 'isRead' => false]);
+        }
+
+        return $this->render('profile/bookings.html.twig', [
+            'profile' => $profile,
+            'bookings' => $bookings,
+            'unreadNotifications' => $unreadNotifications,
+        ]);
+    }
+    #[Route('/profile/booking/{id}', name: 'app_booking_detail', methods: ['GET'])]
+    public function show(Booking $booking,EntityManagerInterface $entityManager, Security $security ): Response
+    {
+        $user = $security->getUser();
+        $profile = $user->getProfile();
+        // 🔔 Ajout du compteur de notifications non lues
+        $unreadNotifications = 0;
+
+        foreach ($profile->getBookings() as $booking) {
+            $unreadNotifications += $entityManager->getRepository(Notification::class)
+                ->count(['booking' => $booking, 'isRead' => false]);
+        }
+        return $this->render('profile/booking_detail.html.twig', [
+            'booking' => $booking,
+            'unreadNotifications' => $unreadNotifications,
+            'profile' => $profile,
+        ]);
     }
     #[Route('/profile/notifications', name: 'app_profile_notifications')]
     public function notifications(Request $request, EntityManagerInterface $em, UserInterface $user): Response
