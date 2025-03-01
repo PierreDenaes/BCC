@@ -21,11 +21,11 @@ class NotificationListener
         $notification = $event->getNotification();
         $recipient = $notification->getRecipient();
 
-        // Vérifie si le destinataire est valide et possède un email
-        if (!$recipient || !method_exists($recipient, 'getIdUser') || !method_exists($recipient->getIdUser(), 'getEmail')) {
+        // Vérifie si le destinataire a un compte utilisateur avec une adresse email
+        if (!$recipient || !method_exists($recipient, 'getIdUser') || !$recipient->getIdUser() || !method_exists($recipient->getIdUser(), 'getEmail')) {
             return;
         }
-
+        // Récupère l'adresse email du destinataire
         $email = $recipient->getIdUser()->getEmail();
 
         // Création de l'email en utilisant le template Twig
@@ -39,10 +39,14 @@ class NotificationListener
                 'recipient' => $recipient,
             ]);
 
-        // Vérifie si une pièce jointe existe et l'ajoute
-        $attachmentPath = $notification->getPdfPath();
-        if ($attachmentPath && file_exists($attachmentPath)) {
-            $emailMessage->attachFromPath($attachmentPath, 'document.pdf', 'application/pdf');
+        // Vérifie et attache un fichier PDF si disponible
+        // Vérifie et attache un fichier PDF si disponible
+        if ($notification->getPdfFilename()) {
+            $pdfPath = __DIR__ . '/../../public/uploads/notifications/' . $notification->getPdfFilename();
+
+            if (file_exists($pdfPath)) {
+                $emailMessage->attachFromPath($pdfPath, $notification->getPdfFilename(), 'application/pdf');
+            }
         }
 
         // Envoi de l'email

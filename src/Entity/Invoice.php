@@ -20,7 +20,7 @@ class Invoice
     private ?\DateTimeInterface $paidAt = null;
 
     #[ORM\OneToOne(inversedBy: 'invoice')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Booking $booking = null;
 
     #[ORM\Column(type: "decimal", precision: 10, scale: 2)]

@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use App\Repository\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
+#[Vich\Uploadable]
 class Notification
 {
     #[ORM\Id]
@@ -29,8 +32,13 @@ class Notification
     #[ORM\Column(type: 'boolean')]
     private bool $isRead = false;
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $pdfPath = null;
+    // Nouveau champ pour le stockage du nom du fichier
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $pdfFilename = null;
+
+    // Champ non persisté pour gérer l'upload avec VichUploader
+    #[Vich\UploadableField(mapping: "notification_pdfs", fileNameProperty: "pdfFilename")]
+    private ?File $pdfFile = null;
 
     public function __construct()
     {
@@ -92,14 +100,36 @@ class Notification
         return $this;
     }
 
-    public function getPdfPath(): ?string
+    public function getPdfFilename(): ?string
     {
-        return $this->pdfPath;
+        return $this->pdfFilename;
     }
 
-    public function setPdfPath(?string $pdfPath): static
+    public function setPdfFilename(?string $pdfFilename): self
     {
-        $this->pdfPath = $pdfPath;
+        $this->pdfFilename = $pdfFilename;
         return $this;
+    }
+
+    public function getPdfFile(): ?File
+    {
+        return $this->pdfFile;
+    }
+
+    public function setPdfFile(?File $pdfFile = null): void
+    {
+        $this->pdfFile = $pdfFile;
+        if ($pdfFile) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+    }
+    public function __sleep()
+    {
+        return ['id', 'title', 'message', 'createdAt', 'recipient', 'isRead', 'pdfFilename']; // Exclut pdfFile
+    }
+
+    public function __wakeup()
+    {
+        $this->pdfFile = null; // Empêche les erreurs de désérialisation
     }
 }

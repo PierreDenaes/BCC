@@ -35,13 +35,13 @@ class Booking
     /**
      * @var Collection<int, Participant>
      */
-    #[ORM\OneToMany(targetEntity: Participants::class, mappedBy: 'booking', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Participants::class, mappedBy: 'booking', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $participants;
 
     #[ORM\Column]
     private ?bool $isPaid = false;
 
-    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Invoice $invoice = null;
 
     #[ORM\Column]

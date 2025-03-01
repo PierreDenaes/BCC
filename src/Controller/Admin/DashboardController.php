@@ -3,11 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Entity\Product;
-use Symfony\Component\HttpFoundation\Response;
-use App\Controller\Admin\ProductCrudController;
 use App\Entity\Booking;
 use App\Entity\Gallery;
+use App\Entity\Product;
+use App\Entity\Notification;
+use Symfony\Component\HttpFoundation\Response;
+use App\Controller\Admin\ProductCrudController;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -48,6 +49,7 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa-solid fa-screwdriver-wrench');
         yield MenuItem::section('Gestion des BootCamps');
+        yield MenuItem::linkToCrud('Notifications', 'fas fa-bell', Notification::class);
         yield MenuItem::linkToCrud('Les BootCamps', 'fa-solid fa-campground', Product::class);
         yield MenuItem::linkToCrud('Les Réservations', 'fa-solid fa-calendar-check', Booking::class);
         yield MenuItem::linkToCrud('Galerie Photos', 'fa-solid fa-image', Gallery::class);

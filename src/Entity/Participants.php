@@ -19,8 +19,8 @@ class Participants
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\ManyToOne(inversedBy: 'participants')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Booking::class, inversedBy: 'participants')]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Booking $booking = null;
 
     #[ORM\Column(nullable: true)]
@@ -68,7 +68,7 @@ class Participants
     }
     public function __toString(): string
     {
-        return $this->name.' '.$this->email;
+        return $this->name . ' ' . $this->email;
     }
 
     public function isNotified(): ?bool

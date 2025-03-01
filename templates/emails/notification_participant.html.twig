@@ -1,0 +1,17 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <p>Bonjour,</p>
+
+    <p>Vous avez reçu une notification concernant votre participation :</p>
+
+    <p><strong>{{ notification.title }}</strong></p>
+    <p>{{ notification.message|nl2br }}</p>
+
+    {% if notification.pdfFilename %}
+        <p>Un document est joint à ce mail.</p>
+    {% endif %}
+
+    <p>Cordialement,</p>
+    <p><strong>Bootcamp Admin</strong></p>
+{% endblock %}

@@ -14,3 +14,7 @@ vich_uploader:
             uri_prefix: /images/avatars
             upload_destination: '%kernel.project_dir%/public/images/avatars'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+        notification_pdfs:
+            uri_prefix: /uploads/notifications
+            upload_destination: '%kernel.project_dir%/public/uploads/notifications'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

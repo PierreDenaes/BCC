@@ -28,7 +28,25 @@
 						<p>{{ notification.message }}</p>
 						<small class="text-muted">Reçu le
 							{{ notification.createdAt|date('d/m/Y H:i') }}</small>
+						{% if notification.pdfFilename %}
+							<p>
+								<strong>Document attaché :</strong>
+							</p>
+							<p>
+								📄
+								<a href="{{ asset('uploads/notifications/' ~ notification.pdfFilename) }}" target="_blank">
+									Télécharger le PDF
+								</a>
+							</p>
 
+							<!-- Affichage du PDF en iframe si compatible -->
+							<iframe src="{{ asset('uploads/notifications/' ~ notification.pdfFilename) }}" width="100%" height="600px" style="border: none;">
+								Votre navigateur ne supporte pas l'affichage des PDF.
+								<a href="{{ asset('uploads/notifications/' ~ notification.pdfFilename) }}">Téléchargez-le ici</a>.
+							</iframe>
+						{% else %}
+							<p>Aucun document joint.</p>
+						{% endif %}
 						{% if not notification.isRead %}
 							<form method="post" class="mt-2">
 								<input type="hidden" name="notification_id" value="{{ notification.id }}">
