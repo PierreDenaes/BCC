@@ -6,6 +6,7 @@ use App\Entity\Booking;
 use App\Entity\Invoice;
 use App\Entity\Product;
 use App\Form\BookingType;
+use App\Entity\Notification;
 use App\Repository\BookingRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Bundle\SecurityBundle\Security;
 
 class BookingController extends AbstractController
 {
@@ -79,7 +80,7 @@ class BookingController extends AbstractController
     }
     #[IsGranted('ROLE_USER')]
     #[Route('/book', name: 'book', methods: ['GET', 'POST'])]
-    public function book(Request $request, EntityManagerInterface $entityManager, BookingRepository $bookingRepository): Response
+    public function book(Request $request, EntityManagerInterface $entityManager, BookingRepository $bookingRepository, Security $security): Response
     {
         $booking = new Booking();
         $form = $this->createForm(BookingType::class, $booking);
@@ -143,9 +144,19 @@ class BookingController extends AbstractController
             $entityManager->flush();
             return new JsonResponse(['success' => true,'invoiceId' => $invoice->getId()], Response::HTTP_OK);
         }
+        $user = $security->getUser();
+        $profile = $user->getProfile();
+        // 🔔 Ajout du compteur de notifications non lues
+        $unreadNotifications = 0;
 
+        foreach ($profile->getBookings() as $booking) {
+            $unreadNotifications += $entityManager->getRepository(Notification::class)
+                ->count(['booking' => $booking, 'isRead' => false]);
+        }
         return $this->render('booking/book.html.twig', [
             'form' => $form->createView(),
+            'unreadNotifications' => $unreadNotifications,
+            'profile' => $profile,
         ]);
     }
    

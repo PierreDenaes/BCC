@@ -28,14 +28,18 @@
                     <h3>{{ booking.product.forfait }}</h3>
                     <p><strong>Date de réservation :</strong> {{ booking.createdAt|date('d/m/Y H:i') }}</p>
                     
-                    <h4>📌 Participants</h4>
-                    <ul>
-                        {% for participant in booking.participants %}
-                            <li>{{ participant.fullName ?? 'Inconnu' }} - {{ participant.email ?? 'Email non renseigné' }}</li>
-                        {% else %}
-                            <li class="text-muted">Aucun participant enregistré</li>
-                        {% endfor %}
-                    </ul>
+                    <p class="mb-1 fs-5">📌 Participants :</p>
+                                <ul class="list-unstyled">
+                                    {% for participant in booking.participants %}
+                                        <li>👤 {{ participant.fullName ?? 'Inconnu' }} 
+                                            {% if participant.email %}
+                                                (<a href="mailto:{{ participant.email }}">{{ participant.email }}</a>)
+                                            {% endif %}
+                                        </li>
+                                    {% else %}
+                                        <li class="text-muted">Aucun participant enregistré</li>
+                                    {% endfor %}
+                                </ul>
 
                     <h4>💰 Paiement</h4>
                     <p>

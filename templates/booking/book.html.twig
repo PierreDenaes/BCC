@@ -14,10 +14,17 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-        <h1>Réserver un bootcamp</h1>
-        <div class="row">
-            <div class="col-12 col-md-8 m-auto mb-3" id="calendar"></div>
+    <div class="container-fluid min-vh-100">
+		<div
+			class="row p-4">
+			<!-- Sidebar -->
+			<div class="col-12 col-lg-3 mb-3">
+				{% include 'profile/_sidebar.html.twig' %}
+			</div>
+            <div class="col-12 col-lg-9 m-auto mb-3">
+            <h1>Reservez votre Bootcamp</h1>
+            <div id="calendar"></div>
+            </div>
         </div>
         
         <!-- Modal pour le formulaire de réservation -->

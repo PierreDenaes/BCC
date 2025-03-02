@@ -32,16 +32,13 @@
 				</ul>
 
 				<div class="mt-4 d-grid gap-2">
-					<a href="{{ path('book') }}" id="bookProfile" class="btn btn-primary">
-						📅 Réserver un bootcamp
+					<a href="{{ path('book') }}" id="bookProfile" class="btn btn-outline-blueboot">
+						🚀 Réserver un bootcamp
 					</a>
-					<a href="{{ path('app_profile_bookings') }}" class="btn btn-blueboot">
+					<a href="{{ path('app_profile_bookings') }}" class="btn btn-outline-blueboot">
 						📅 Voir mes réservations
 					</a>
-					<a href="{{ path('app_profile_edit') }}" id="editProfileButton" class="btn btn-outline-primary">
-						✏️ Éditer le profil
-					</a>
-					<a href="{{ path('app_profile_notifications') }}" class="btn btn-warning position-relative">
+					<a href="{{ path('app_profile_notifications') }}" class="btn btn-warning position-relative text-white">
 						🔔 Voir mes notifications
 						{% if unreadNotifications > 0 %}
 							<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -49,9 +46,14 @@
 							</span>
 						{% endif %}
 					</a>
+					<hr>
+					<a href="{{ path('app_profile_edit') }}" id="editProfileButton" class="btn btn-outline-blueboot">
+						✏️ Modifier le profil
+					</a>
+					
 				</div>
 
-				<div class="mt-3 text-center">
+				<div class="text-center mt-2">
 					<form method="post" action="{{ path('app_profile_delete') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil ?');">
 						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ profile.id) }}">
 						<button class="btn btn-danger text-white w-100">❌ Supprimer mon compte</button>
