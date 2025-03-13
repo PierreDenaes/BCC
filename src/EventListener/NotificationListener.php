@@ -19,6 +19,7 @@ class NotificationListener
 
     public function onNotificationCreated(NotificationCreatedEvent $event): void
     {
+        
         $notification = $event->getNotification();
         $booking = $notification->getBooking(); // Récupérer la réservation liée
 
@@ -28,12 +29,12 @@ class NotificationListener
         // 2️⃣ Envoyer la notification aux participants (si applicable)
         if ($booking && method_exists($booking, 'getParticipants')) {
             foreach ($booking->getParticipants() as $participant) {
-                // Vérifier si le participant doit être notifié et a une adresse email valide
                 if ($participant->isNotified() && method_exists($participant, 'getEmail') && $participant->getEmail()) {
                     $this->sendEmailToParticipant($notification, $participant);
                 }
             }
         }
+        die(); // Arrêter l'exécution pour vérifier si le dump s'affiche
     }
 
     /**
@@ -42,17 +43,20 @@ class NotificationListener
     private function sendEmailToOrganizer(Notification $notification): void
     {
         $recipient = $notification->getRecipient();
+        
 
         if (!$recipient || !method_exists($recipient, 'getIdUser') || !$recipient->getIdUser() || !method_exists($recipient->getIdUser(), 'getEmail')) {
+            
             return;
         }
 
         $email = $recipient->getIdUser()->getEmail();
+        
 
         $emailMessage = $this->createEmail(
             $email,
             $notification->getTitle(),
-            'emails/notification.html.twig', // Template spécifique aux organisateurs
+            'emails/notification.html.twig',
             [
                 'notification' => $notification,
                 'recipient' => $recipient,
@@ -60,6 +64,7 @@ class NotificationListener
         );
 
         $this->mailer->send($emailMessage);
+        
     }
 
     /**
@@ -88,7 +93,7 @@ class NotificationListener
     private function createEmail(string $to, string $subject, string $template, array $context): TemplatedEmail
     {
         $emailMessage = (new TemplatedEmail())
-            ->from(new Address('photostudio13000@gmail.com', 'Bootcamp Admin'))
+            ->from(new Address('admin@bootcampscenturio.com', 'Bootcamp Admin'))
             ->to(new Address($to))
             ->subject($subject)
             ->htmlTemplate($template)

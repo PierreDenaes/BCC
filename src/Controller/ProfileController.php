@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProfileController extends AbstractController
@@ -86,13 +88,34 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile/delete', name: 'app_profile_delete')]
-    public function delete(Request $request, EntityManagerInterface $em, UserInterface $user): Response
+    public function delete(Request $request, EntityManagerInterface $em, UserInterface $user, TokenStorageInterface $tokenStorage, SessionInterface $session): Response
     {
         $profile = $user->getProfile();
 
-        if ($profile && $this->isCsrfTokenValid('delete' . $profile->getId(), $request->request->get('_token'))) {
+        if (!$profile) {
+            throw new \Exception("Le profil de l'utilisateur n'existe pas.");
+        }
+
+        if (!$this->isCsrfTokenValid('delete' . $profile->getId(), $request->request->get('_token'))) {
+            throw new \Exception("Token CSRF invalide.");
+        }
+
+        try {
+            // Supprimer toutes les notifications associées AVANT de supprimer le profil
+            foreach ($profile->getNotifications() as $notification) {
+                $em->remove($notification);
+            }
+            $em->flush();
+
             $em->remove($profile);
             $em->flush();
+
+            // Déconnecter l'utilisateur
+            $tokenStorage->setToken(null);
+            $session->invalidate();
+        } catch (\Exception $e) {
+            dump($e->getMessage());
+            die;
         }
 
         return $this->redirectToRoute('app_home');
@@ -128,7 +151,7 @@ class ProfileController extends AbstractController
         ]);
     }
     #[Route('/profile/booking/{id}', name: 'app_booking_detail', methods: ['GET'])]
-    public function show(Booking $booking,EntityManagerInterface $entityManager, Security $security ): Response
+    public function show(Booking $booking, EntityManagerInterface $entityManager, Security $security): Response
     {
         $user = $security->getUser();
         $profile = $user->getProfile();

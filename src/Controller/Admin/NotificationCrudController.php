@@ -43,7 +43,9 @@ class NotificationCrudController extends AbstractCrudController
                     $alias = $qb->getRootAliases()[0]; // Récupérer l'alias principal de l'entité
                     return $qb->orderBy($alias . '.createdAt', 'DESC');
                 }),
-            BooleanField::new('isRead', 'Lu'),
+            BooleanField::new('isRead', 'Lu')
+                ->setFormTypeOptions(['attr' => ['disabled' => 'disabled']])
+                ->hideOnForm(),
             DateTimeField::new('createdAt', 'Créé le')
                 ->hideOnForm(),
 
@@ -65,6 +67,11 @@ class NotificationCrudController extends AbstractCrudController
             return;
         }
 
+        // 🔹 Associer le destinataire à la notification avant de persister
+        if ($entityInstance->getBooking()) {
+            $entityInstance->setRecipient($entityInstance->getBooking()->getProfile());
+        }
+
         // Persister la notification
         $entityManager->persist($entityInstance);
         $entityManager->flush();
@@ -78,6 +85,11 @@ class NotificationCrudController extends AbstractCrudController
     {
         if (!$entityInstance instanceof Notification) {
             return;
+        }
+
+        // 🔹 Associer le destinataire à la notification avant mise à jour
+        if ($entityInstance->getBooking()) {
+            $entityInstance->setRecipient($entityInstance->getBooking()->getProfile());
         }
 
         // Sauvegarder la modification

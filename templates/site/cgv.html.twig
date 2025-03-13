@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions Générales de Vente{% endblock %}
+
+{% block body %}
+    <div class="container pt-5">
+        <h1 class="text-center">Conditions Générales de Vente</h1>
+        <p class="text-center text-muted">Dernière mise à jour : 11/03/2025</p>
+        <hr>
+
+        <h2>1. Présentation de l’entreprise</h2>
+        <p><strong>Bootcamps Centurio</strong><br>
+            Entreprise individuelle (auto-entrepreneur)<br>
+            Représentée par : CAMARA Moussa<br>
+            SIRET : 93185839300016<br>
+            Adresse du siège social : Boulevard des Armaris, 83100 Toulon, France<br>
+            Site internet : <a href="https://www.bootcampscenturio.com">www.bootcampscenturio.com</a><br>
+            Email : <a href="mailto:contact@bootcampscenturio.com">contact@bootcampscenturio.com</a>
+        </p>
+
+        <h2>2. Objet des Conditions Générales de Vente</h2>
+        <p>Les présentes Conditions Générales de Vente (CGV) régissent les relations contractuelles entre Bootcamps Centurio et toute personne physique ou morale (ci-après « le Client »), concernant la vente des prestations de services d’activités de loisirs organisées par Bootcamps Centurio.</p>
+        <p>Toute réservation d’une prestation implique l’adhésion entière et sans réserve du Client aux présentes CGV.</p>
+
+        <h2>3. Description des Prestations</h2>
+        <p>Bootcamps Centurio propose des activités de loisirs et d’entraînement physique en plein air, de type bootcamps, destinées à un public de particuliers ou de professionnels.</p>
+        <p>Les prestations sont réalisées à des dates et horaires déterminés, et sur des sites précisés à l’avance.</p>
+
+        <h2>4. Conditions de Réservation</h2>
+        <h3>4.1 Modalités de réservation</h3>
+        <p>Les réservations se font :
+            <ul>
+                <li>En ligne via le site <a href="https://www.bootcampscenturio.com">www.bootcampscenturio.com</a></li>
+                <li>Par tout autre moyen convenu avec Bootcamps Centurio (email, téléphone)</li>
+            </ul>
+        </p>
+
+        <h3>4.2 Prise en compte de la réservation</h3>
+        <p>Toute réservation est confirmée après réception du paiement intégral du prix de la prestation.
+            Une confirmation écrite (par e-mail) récapitulant les détails de l’activité (date, lieu, heure) est envoyée au Client.</p>
+
+        <h2>5. Tarifs et Conditions de Paiement</h2>
+        <h3>5.1 Tarifs</h3>
+        <p>Les prix sont indiqués en euros (€), toutes taxes comprises (TTC). Bootcamps Centurio se réserve le droit de modifier ses tarifs à tout moment. Toutefois, le prix appliqué est celui en vigueur au moment de la validation de la réservation.</p>
+
+        <h3>5.2 Modalités de paiement</h3>
+        <p>Le règlement s’effectue :</p>
+        <ul>
+            <li>En ligne par carte bancaire via une plateforme sécurisée <strong>Stripe</strong></li>
+            <li>Par virement bancaire (uniquement sur demande)</li>
+        </ul>
+        <p>Le paiement intégral est exigé au moment de la réservation.</p>
+
+        <h2>6. Droit de Rétractation</h2>
+        <h3>6.1 Principe</h3>
+        <p>Conformément à l’article L221-18 du Code de la consommation, le Client dispose d’un délai légal de 14 jours à compter de la conclusion du contrat pour exercer son droit de rétractation sans avoir à justifier de motif.</p>
+
+        <h3>6.2 Exception</h3>
+        <p>Ce droit ne s'applique pas aux prestations de services de loisirs fournies à une date ou une période déterminée. Le Client renonce expressément à son droit de rétractation si l'exécution de la prestation a lieu avant la fin de ce délai de 14 jours.</p>
+
+        <h2>7. Conditions d’Annulation et de Remboursement</h2>
+        <h3>7.1 Annulation par le Client</h3>
+        <p>Après le délai légal de rétractation de 14 jours :</p>
+        <ul>
+            <li>Aucun remboursement ne sera accordé si le Client annule sa participation.</li>
+            <li>Toute absence ou annulation du Client est considérée comme une prestation due.</li>
+        </ul>
+
+        <h3>7.2 Annulation par Bootcamps Centurio</h3>
+        <p>En cas d’annulation de la prestation par Bootcamps Centurio (conditions météorologiques extrêmes, interdictions administratives, force majeure) :</p>
+        <ul>
+            <li>Report de la prestation à une date ultérieure.</li>
+            <li>Remboursement intégral du prix payé.</li>
+        </ul>
+
+        <h2>8. Responsabilités</h2>
+        <h3>8.1 Responsabilité du Client</h3>
+        <p>Le Client déclare :</p>
+        <ul>
+            <li>Être apte physiquement à la pratique d'activités sportives.</li>
+            <li>Participer en pleine connaissance des risques.</li>
+            <li>Respecter les consignes de sécurité.</li>
+        </ul>
+
+        <h3>8.2 Assurance</h3>
+        <p>Il est recommandé aux participants de disposer d'une assurance individuelle accident et/ou responsabilité civile personnelle.</p>
+
+        <h2>9. Droit à l’image</h2>
+        <p>Des photos et vidéos peuvent être prises à des fins promotionnelles. Le Client autorise leur utilisation sauf opposition écrite avant la prestation.</p>
+
+        <h2>10. Protection des Données Personnelles</h2>
+        <p>Les informations recueillies sont traitées conformément au RGPD. Le Client peut exercer ses droits en contactant <a href="mailto:contact@bootcampscenturio.com">contact@bootcampscenturio.com</a>. Voir la <a href="{{ path('politique_de_confidentialite')}}">Politique de Confidentialité</a>.</p>
+
+        <h2>11. Règlement des Litiges</h2>
+        <p>Conformément à l’article L612-1 du Code de la consommation, le Client peut recourir à <a href="https://www.cnpm-mediation-consommation.eu">CNPM Médiation Consommation</a>.</p>
+
+        <h2>12. Loi Applicable</h2>
+        <p>Les présentes CGV sont soumises au droit français.</p>
+
+        <h2>13. Acceptation des CGV</h2>
+        <p>Le Client déclare avoir pris connaissance et accepté les présentes CGV avant toute commande.</p>
+    </div>
+{% endblock %}

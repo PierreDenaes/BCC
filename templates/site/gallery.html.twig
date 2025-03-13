@@ -1,21 +1,122 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Galerie de Photos{% endblock %}
+{% block title %}📷 Galerie Photos{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <style>
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .gallery-header p {
+            font-size: 1.2rem;
+            color: #777;
+        }
+
+        .gallery-grid {
+            column-count: 3;
+            column-gap: 15px;
+        }
+
+        .gallery-item {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border-radius: 10px;
+            position: relative;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+
+        .gallery-item img:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        @media (max-width: 992px) {
+            .gallery-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .gallery-grid {
+                column-count: 1;
+            }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-<div class="container-fluid pt-3">
-    <h1 class="text-center mb-4">Galerie de Photos</h1>
-    <div class="row">
-        {% for photo in photos %}
-            <div class="col-md-4 col-sm-6 mb-4">
-                <div class="card h-100">
-                    <img src="{{ vich_uploader_asset(photo, 'imageFile') }}" class="card-img-top" alt="{{ photo.altText }}">
-                    <div class="card-body">
-                        <p class="card-text">{{ photo.altText }}</p>
+<div class="container-fluid py-4">
+    <div class="gallery-container">
+        <div class="gallery-header">
+            <h1>📸 Galerie Photos</h1>
+            <p>Découvrez nos meilleurs moments en images !</p>
+        </div>
+        <div class="gallery-grid">
+            {% for photo in photos %}
+                <div class="gallery-item">
+                    <a href="{{ vich_uploader_asset(photo, 'imageFile') }}" data-lightbox="gallery">
+                        <img src="{{ vich_uploader_asset(photo, 'imageFile') }}" alt="{{ photo.altText }}">
+                    </a>
+                    <div class="gallery-overlay">
+                        <p class="m-0">{{ photo.altText }}</p>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% else %}
+                <p class="text-muted text-center">Aucune photo disponible pour le moment.</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 {% endblock %}

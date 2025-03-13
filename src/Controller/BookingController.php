@@ -149,9 +149,16 @@ class BookingController extends AbstractController
         // 🔔 Ajout du compteur de notifications non lues
         $unreadNotifications = 0;
 
-        foreach ($profile->getBookings() as $booking) {
-            $unreadNotifications += $entityManager->getRepository(Notification::class)
-                ->count(['booking' => $booking, 'isRead' => false]);
+        if (!$profile) {
+            $this->addFlash('warning', 'Tu dois compléter ton profil avant de réserver.');
+            return $this->redirectToRoute('app_profile'); // route pour créer un profil
+        }
+
+        if ($profile) {
+            foreach ($profile->getBookings() as $booking) {
+                $unreadNotifications += $entityManager->getRepository(Notification::class)
+                    ->count(['booking' => $booking, 'isRead' => false]);
+            }
         }
         return $this->render('booking/book.html.twig', [
             'form' => $form->createView(),

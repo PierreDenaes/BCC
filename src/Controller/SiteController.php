@@ -27,4 +27,33 @@ class SiteController extends AbstractController
             'photos' => $photos,
         ]);
     }
+    #[Route('/cgv', name: 'cgv_index')]
+    public function pageCgv(): Response
+    {
+        return $this->render('site/cgv.html.twig');
+    }
+    # Mentions  légales
+    #[Route('/mentions-legales', name: 'mentions_legales')]
+    public function pageMentionsLegales(): Response
+    {
+        return $this->render('site/mentions_legales.html.twig');
+    }
+    # Contact
+    #[Route('/contact', name: 'contact')]
+    public function pageContact(): Response
+    {
+        return $this->render('site/contact.html.twig');
+    }
+    # Politique de confidentialité
+    #[Route('/politique-de-confidentialite', name: 'politique_de_confidentialite')]
+    public function pagePolitiqueDeConfidentialite(): Response
+    {
+        return $this->render('site/politique_de_confidentialite.html.twig');
+    }
+    # Politique de cookies
+    #[Route('/politique-de-cookies', name: 'politique_de_cookies')]
+    public function pagePolitiqueDeCookies(): Response
+    {
+        return $this->render('site/politique_de_cookies.html.twig');
+    }
 }

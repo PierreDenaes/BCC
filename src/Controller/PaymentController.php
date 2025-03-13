@@ -37,7 +37,7 @@ class PaymentController extends AbstractController
         if (!$invoice) {
             return new JsonResponse(['error' => 'Invoice not found.'], Response::HTTP_NOT_FOUND);
         }
-        $productImageUrl = 'https://127.0.0.1:8000/images/bootcamps/' . $invoice->getBooking()->getProduct()->getBgName();
+        $productImageUrl = 'https://bootcampscenturio.com/images/bootcamps/' . $invoice->getBooking()->getProduct()->getBgName();
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
         $session = Session::create([
@@ -124,7 +124,7 @@ class PaymentController extends AbstractController
                 // Send email notifications
                 $this->sendEmail(
                     $this->mailer,
-                    'contact@bootcampscenturio.com',
+                    'admin@bootcampscenturio.com',
                     $booking->getProfile()->getIdUser()->getEmail(),
                     'Confirmation de réservation',
                     $userEmailContent
@@ -133,7 +133,7 @@ class PaymentController extends AbstractController
                 $this->sendEmail(
                     $this->mailer,
                     'contact@bootcampscenturio.com',
-                    'pierre.contact@dnadaweb.fr',
+                    'admin@bootcampscenturio.com',
                     'Nouvelle réservation payée',
                     $adminEmailContent
                 );
@@ -145,7 +145,7 @@ class PaymentController extends AbstractController
                         $participantEmailContent = $this->generateParticipantEmailContent($participant, $booking);
                         $this->sendEmail(
                             $this->mailer,
-                            'contact@bootcampscenturio.com',
+                            'admin@bootcampscenturio.com',
                             $participant->getEmail(),
                             'Vous avez été ajouté à une réservation',
                             $participantEmailContent

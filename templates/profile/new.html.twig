@@ -1,29 +1,80 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}👤 Créer votre Profil{% endblock %}
 
-{% block title %}Créer Profil
-{% endblock %}
 {% block stylesheets %}
-	{{ parent() }}
-	{{ encore_entry_link_tags('profile') }}
+    {{ parent() }}
+    {{ encore_entry_link_tags('profile') }}
 {% endblock %}
 
 {% block javascripts %}
-	{{ parent() }}
-	{{ encore_entry_script_tags('profile') }}
-
+    {{ encore_entry_script_tags('profile') }}
 {% endblock %}
 
 {% block body %}
-	<div class="container-fluid">
-		<h1>Créer votre profil</h1>
+    <div class="container-fluid">
+    <div class="row p-lg-5 p-3">
+    <div class="card shadow p-3 p-lg-4 col-lg-6 mx-auto">
+            <h2 class="text-center mb-4">👤 Créer votre Profil</h2>
+            {{ form_start(form) }}
 
-		{{ form_start(form) }}
-		{{ form_widget(form) }}
-		<button class="btn">Enregistrer</button>
-		{{ form_end(form) }}
-	</div>
+            <div class="mb-3">
+                {{ form_label(form.avatarFile, 'Avatar') }}
+                {{ form_widget(form.avatarFile, { 'attr': {'class': 'form-control ', 'id': 'avatarInput'} }) }}
+            </div>
 
-{% block footer %}{% endblock %}
+            <div class="mb-3">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.firstname) }}
+                {{ form_widget(form.firstname, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.isCompany) }}
+                {{ form_widget(form.isCompany, {'attr': {'id': 'profile_isCompany'}}) }}
+            </div>
+
+            <!-- Champs Entreprise -->
+            <div id="companyFields" class="d-none">
+                <div class="mb-3">
+                    {{ form_label(form.companyName, 'Nom de l\'entreprise') }}
+                    {{ form_widget(form.companyName, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.siretNumber, 'Numéro de SIRET') }}
+                    {{ form_widget(form.siretNumber, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.billingAddress) }}
+                {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.billingCity) }}
+                {{ form_widget(form.billingCity, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.zipCode) }}
+                {{ form_widget(form.zipCode, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.phoneNumber) }}
+                {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-lg btn-blueboot w-100 mt-3">✅ Enregistrer</button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>     
+    </div>
 {% endblock %}
-

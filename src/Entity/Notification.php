@@ -40,6 +40,11 @@ class Notification
     #[Vich\UploadableField(mapping: "notification_pdfs", fileNameProperty: "pdfFilename")]
     private ?File $pdfFile = null;
 
+    #[ORM\ManyToOne(targetEntity: Profile::class, inversedBy: 'notifications')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Profile $recipient = null;
+    
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -80,7 +85,13 @@ class Notification
 
     public function getRecipient(): ?Profile
     {
-        return $this->booking ? $this->booking->getProfile() : null;
+        return $this->recipient;
+    }
+
+    public function setRecipient(?Profile $recipient): static
+    {
+        $this->recipient = $recipient;
+        return $this;
     }
 
     public function isRead(): bool
