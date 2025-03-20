@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FAQ - Bootcamps Centurio{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# {{ encore_entry_link_tags('faq') }} #}
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1 class="text-center mb-4">📖 FAQ BOOTCAMPS CENTURIO</h1>
+        <p class="text-center text-muted">Parce qu’on ne part jamais à l’aventure sans être bien briefé ! 💪</p>
+
+        <div class="accordion" id="faqAccordion">
+            {% set faqs = [
+                { 'question': "C’est quoi un Bootcamp Centurio ?", 'answer': "Un bootcamp Centurio, c’est une expérience immersive de dépassement de soi. Inspirée de l’entraînement militaire, notre formule te propulse dans une aventure physique et mentale, que tu sois particulier, entreprise, association, EVG/EVJF ou groupe d’amis ! ✅ Esprit d’équipe, cohésion et dépassement ✅ Encadré par des professionnels ✅ En pleine nature… et partout en France !" },
+                { 'question': "Quels types de formules proposez-vous ?", 'answer': "👉 Demi-journée : pour se challenger sans pression (environ 3h à 4h). 👉 Journée complète : une immersion totale avec efforts, cohésion et fun ! 👉 Commando Bivouac (24h) : l’expérience ultime ! Tu vis comme un soldat, avec des missions de nuit, un campement, et une vraie aventure commando." },
+                { 'question': "Faut-il être super sportif pour participer ?", 'answer': "Absolument pas ! Nos bootcamps sont adaptés à tous les niveaux : ✅ Débutants qui veulent se challenger ✅ Sportifs confirmés qui cherchent le dépassement Les activités sont variées et adaptées en fonction de ton groupe et de tes capacités. On est là pour t’accompagner, pas te briser ! 😎" },
+                { 'question': "Comment réserver une session ?", 'answer': "Simple comme bonjour, ou comme 'A vos ordres !' : 1. Tu nous contactes via www.bootcampscenturio.com ou par mail : contact@bootcampscenturio.com 2. On valide ensemble la formule, le lieu et le nombre de participants 3. Tu reçois un devis + contrat 4. Tu verses un acompte de 50% pour réserver Et ta mission est calée !" },
+                { 'question': "Combien de temps dure une session ?", 'answer': "✅ Demi-journée : 3h à 4h ✅ Journée complète : 6h à 8h ✅ Commando Bivouac : 24h non-stop, avec campement, épreuves de nuit et réveil musclé 😱" },
+                { 'question': "Où se déroulent les bootcamps ?", 'answer': "🌍 PARTOUT EN FRANCE ! Nos instructeurs se déplacent sur toute la France pour faire vivre l'expérience Centurio. On choisit ensemble le terrain idéal (forêt, plage, montagne, zones rurales). On peut aussi organiser ça sur ton site privé ou entreprise, sous conditions." },
+                { 'question': "Quel matériel faut-il apporter ?", 'answer': "🔸 Une tenue de sport (confortable, qui n’a pas peur de la boue !) 🔸 Des chaussures de sport adaptées (trail, running) 🔸 Une gourde d’eau (obligatoire) 🔸 Une protection solaire selon la météo Le reste ? C’est nous ! Cordes, obstacles, sacs de portage, matériel spécifique : tout est fourni par Centurio !" },
+                { 'question': "À partir de quel âge peut-on participer ?", 'answer': "➡️ Dès 10 ans, accompagné d’un adulte responsable. Pour les groupes familles, on adapte les activités aux plus jeunes ! Les mineurs doivent fournir une autorisation parentale." },
+                { 'question': "Est-ce que c’est dangereux ?", 'answer': "Nos instructeurs sont des pros formés à la sécurité. Mais comme toute activité physique, il existe des risques (entorse, chute, fatigue…). On s’engage à : ✅ Faire un briefing sécurité avant chaque session ✅ Adapter les efforts en fonction de ton niveau ✅ Être vigilants à chaque instant Un certificat médical peut être demandé selon la formule choisie." },
+                { 'question': "Et si la météo est pourrie ?", 'answer': "🌧️ Pluie, vent ou soleil brûlant : on s’adapte ! 🚫 En cas de météo dangereuse (orages, alertes météo), on reportera la session sans frais. 👉 Si tu veux annuler de ton côté : - Jusqu’à 14 jours avant : remboursement total - Passé ce délai : aucun remboursement, comme prévu dans nos CGV" },
+                { 'question': "Proposez-vous des formules sur mesure ?", 'answer': "100% ! Tu veux un team building d’entreprise ou une soirée commando entre amis ? On monte une formule sur-mesure, en fonction de tes objectifs et de ton équipe. Débriefing, médailles, trophées, apéro post-challenge : on voit ça ensemble !" },
+                { 'question': "Peut-on privatiser un bootcamp ?", 'answer': "Bien sûr ! On privatise pour groupes d’amis, familles, entreprises, événements spéciaux. Tu choisis la date, le lieu et le niveau de difficulté ! ✅ EVG / EVJF ✅ Team building entreprise ✅ Cohésion familiale ✅ Collectivités et écoles" },
+                { 'question': "Que se passe-t-il après la session ?", 'answer': "✅ Tu repars avec des souvenirs et des photos (offertes 📸) ✅ Un corps fatigué mais fier ✅ Des courbatures de guerrier (garanties 😁) ✅ Et parfois, une envie de recommencer ! On te file aussi nos conseils de récupération et d'entretien." },
+                { 'question': "Comment vous contacter ?", 'answer': "📧 contact@bootcampscenturio.com 🌐 www.bootcampscenturio.com ➡️ On répond vite et toujours avec le sourire ! Alors, prêt à relever le défi Centurio ? 🔥💪" }
+            ] %}
+
+            {% for faq in faqs %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ loop.index }}">
+                        <button class="accordion-button {% if loop.index != 1 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="{% if loop.index == 1 %}true{% else %}false{% endif %}" aria-controls="collapse{{ loop.index }}">
+                            {{ faq.question }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {% if loop.index == 1 %}show{% endif %}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            {{ faq.answer }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

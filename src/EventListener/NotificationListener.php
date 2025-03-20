@@ -34,7 +34,7 @@ class NotificationListener
                 }
             }
         }
-        die(); // Arrêter l'exécution pour vérifier si le dump s'affiche
+     
     }
 
     /**

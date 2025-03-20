@@ -56,4 +56,10 @@ class SiteController extends AbstractController
     {
         return $this->render('site/politique_de_cookies.html.twig');
     }
+    # FAQ
+    #[Route('/faq', name: 'faq')]
+    public function pageFaq(): Response
+    {
+        return $this->render('site/faq.html.twig');
+    }
 }

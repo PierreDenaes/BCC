@@ -79,6 +79,8 @@ class NotificationCrudController extends AbstractCrudController
         // Dispatch l'événement pour l'envoi d'un email
         $event = new NotificationCreatedEvent($entityInstance);
         $this->eventDispatcher->dispatch($event, NotificationCreatedEvent::NAME);
+        
+        
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
