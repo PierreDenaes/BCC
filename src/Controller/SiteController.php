@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\FaqRepository;
 use App\Repository\GalleryRepository;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,8 +59,11 @@ class SiteController extends AbstractController
     }
     # FAQ
     #[Route('/faq', name: 'faq')]
-    public function pageFaq(): Response
+    
+    public function pageFaq(FaqRepository $faqRepository): Response
     {
-        return $this->render('site/faq.html.twig');
+        return $this->render('site/faq.html.twig', [
+            'faqs' => $faqRepository->findAll(),
+        ]);
     }
 }
