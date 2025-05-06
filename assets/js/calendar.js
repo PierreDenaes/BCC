@@ -390,7 +390,7 @@ class BookingFormManager {
                             if (session.error) {
                                 alert(session.error);
                             } else {
-                                const stripe = Stripe('pk_test_51PNxdI2KzfchddbZVdS365NZwFLFYZSvHgwicMD0bFrw5zwlCT2w5eGMusV9MZCn8vyd4Yf3CeupElRl4hC9AWOl00PvJNIKxE');
+                                const stripe = Stripe('pk_test_51OyW1HP5v3Vi9EzZYLzo6uXxIQdBmtkgqlJVcIFkqwwULoCUyaUlQaOA66xnD0XAbbPZmrFpNkRFT3GpS3fGSkHb00NuHnvrji');
                                 stripe.redirectToCheckout({ sessionId: session.id });
                             }
                         })

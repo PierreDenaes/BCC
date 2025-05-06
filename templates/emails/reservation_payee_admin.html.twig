@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Nouvelle Réservation Payée</title>
+	<style>
+		{{ include('emails/_styles.twig') }}
+	</style>
+</head>
+<body>
+<div class="email-container">
+	<div class="email-header">
+		<img src="{{ asset('images/site/logo-blanc-bootcamp.webp') }}" alt="Bootcamp Centurion"><br>
+		💰 Nouvelle réservation payée
+	</div>
+	<div class="email-body">
+		<p>Une nouvelle réservation a été payée. Voici les détails :</p>
+		<ul>
+			<li><strong>Produit :</strong> {{ product.forfait }}</li>
+			<li><strong>Date :</strong> {{ date }}</li>
+			<li><strong>Montant :</strong> {{ amount }} €</li>
+			<li><strong>Email utilisateur :</strong> {{ user.email }}</li>
+			<li><strong>Téléphone :</strong> {{ user.phone }}</li>
+		</ul>
+	</div>
+	<div class="footer">
+		© 2025 BootcampPro - Tous droits réservés
+	</div>
+</div>
+</body>
+</html>

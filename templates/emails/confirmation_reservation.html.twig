@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Confirmation de Réservation</title>
+		<style>
+			{{include('emails/_styles.twig')}}</style>
+	</head>
+	<body>
+		<div class="email-container">
+			<div class="email-header">
+				<img src="{{ asset('images/site/logo-blanc-bootcamp.webp') }}" alt="Bootcamp Centurion"><br>
+				🎟️ Confirmation de votre réservation Bootcamp
+			</div>
+			<div class="email-body">
+				<p>Bonjour
+					{{ participant.name ?? 'Cher participant' }},</p>
+
+				<p>Votre réservation a bien été enregistrée. Voici les détails :</p>
+				<ul>
+					<li>
+						<strong>Produit :</strong>
+						{{ product.forfait }}</li>
+					<li>
+						<strong>Description :</strong>
+						{{ product.description }}</li>
+					<li>
+						<strong>Date :</strong>
+						{{ date }}</li>
+					<li>
+						<strong>Montant :</strong>
+						{{ amount }}
+						€</li>
+				</ul>
+
+				{% if attachedDocuments is not empty %}
+					<p style="font-weight:bold;">📄 Documents joints :</p>
+					<ul>
+						{% for doc in attachedDocuments %}
+							<li>{{ doc }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</div>
+			<div class="footer">
+				© 2025 BootcampPro - Tous droits réservés
+			</div>
+		</div>
+	</body>
+</html>

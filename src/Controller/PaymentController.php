@@ -5,28 +5,30 @@ namespace App\Controller;
 
 use Stripe\Stripe;
 use Stripe\Webhook;
+use App\Entity\Booking;
+use Psr\Log\LoggerInterface;
 use Stripe\Checkout\Session;
+use Symfony\Component\Mime\Email;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 
 class PaymentController extends AbstractController
 {
     private MailerInterface $mailer;
     private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger, MailerInterface $mailer)
+    private \Twig\Environment $twig;
+    public function __construct(LoggerInterface $logger, MailerInterface $mailer, \Twig\Environment $twig)
     {
         $this->logger = $logger;
         $this->mailer = $mailer;
+        $this->twig = $twig;
     }
 
     #[Route('/create-checkout-session/{invoiceId}', name: 'create_checkout_session')]
@@ -117,7 +119,7 @@ class PaymentController extends AbstractController
                 $em->persist($booking);
                 $em->flush();
 
-                 // Generate email contents
+                // Generate email contents
                 $userEmailContent = $this->generateUserEmailContent($booking);
                 $adminEmailContent = $this->generateAdminEmailContent($booking);
 
@@ -127,7 +129,8 @@ class PaymentController extends AbstractController
                     'admin@bootcampscenturio.com',
                     $booking->getProfile()->getIdUser()->getEmail(),
                     'Confirmation de réservation',
-                    $userEmailContent
+                    $userEmailContent,
+                    ['Kit_Bienvenue_Bootcamps_Centurio.pdf', 'Ebook_7_Conseils_Bootcamps_Centurio.pdf', 'Decharge_Responsabilite_Bootcamps_Centurio.pdf']
                 );
 
                 $this->sendEmail(
@@ -163,7 +166,7 @@ class PaymentController extends AbstractController
         return new Response('Success', 200);
     }
 
-    private function sendEmail(MailerInterface $mailer, string $from, string $to, string $subject, string $htmlContent): void
+    private function sendEmail(MailerInterface $mailer, string $from, string $to, string $subject, string $htmlContent, array $attachments = []): void
     {
         $email = (new Email())
             ->from($from)
@@ -171,29 +174,43 @@ class PaymentController extends AbstractController
             ->subject($subject)
             ->html($htmlContent);
 
+        foreach ($attachments as $filename) {
+            $filePath = $this->getParameter('kernel.project_dir') . '/public/docs/' . $filename;
+            if (file_exists($filePath)) {
+                $email->attachFromPath($filePath, $filename);
+            }
+        }
+
         $mailer->send($email);
     }
-    private function generateUserEmailContent($booking): string
+    public function generateUserEmailContent(Booking $booking): string
     {
         $profile = $booking->getProfile();
         $product = $booking->getProduct();
-        $amount = $booking->getInvoice()->getAmount();
-        $date = $booking->getCreatedAt()->format('d/m/Y');
+        $invoice = $booking->getInvoice();
 
-        return "
-            <p>Bonjour {$profile->getFirstName()},</p>
-            <p>Votre réservation a été confirmée. Voici les détails de votre réservation :</p>
-            <ul>
-                <li>Produit: {$product->getForfait()}</li>
-                <li>Descriptif: {$product->getDescription()}</li>
-                <li>Date: {$date}</li>
-                <li>Montant: {$amount} €</li>
-            </ul>
-            <p>Merci de votre confiance.</p>
-            <p>BootCamps Centurio</p>
-        ";
+        // Liste des documents joints
+        $attachedDocuments = [
+            'Kit_Bienvenue_Bootcamps_Centurio.pdf',
+            'Ebook_7_Conseils_Bootcamps_Centurio.pdf',
+            'Decharge_Responsabilite_Bootcamps_Centurio.pdf',
+            // ajoute d'autres documents si besoin
+        ];
+
+        return $this->twig->render('emails/confirmation_reservation.html.twig', [
+            'participant' => [
+                'name' => $profile->getFirstName()
+            ],
+            'product' => [
+                'forfait' => $product->getForfait(),
+                'description' => $product->getDescription(),
+            ],
+            'date' => $booking->getCreatedAt()->format('d/m/Y'),
+            'amount' => number_format($invoice->getAmount(), 2, ',', ' '),
+            'attachedDocuments' => $attachedDocuments
+        ]);
     }
-    private function generateAdminEmailContent($booking): string
+    private function generateAdminEmailContent(Booking $booking): string
     {
         $user = $booking->getProfile()->getIdUser();
         $profile = $booking->getProfile();
@@ -201,36 +218,34 @@ class PaymentController extends AbstractController
         $amount = $booking->getInvoice()->getAmount();
         $date = $booking->getCreatedAt()->format('d/m/Y');
         $userEmail = $user->getEmail();
-        $userPhone = $profile->getPhoneNumber(); // Assurez-vous que la méthode getPhoneNumber() existe
+        $userPhone = $profile->getPhoneNumber();
 
-        return "
-            <p>Une nouvelle réservation a été payée. Voici les détails :</p>
-            <ul>
-                <li>Produit: {$product->getForfait()}</li>
-                <li>Date: {$date}</li>
-                <li>Montant: {$amount} €</li>
-                <li>Email de l'utilisateur: {$userEmail}</li>
-                <li>Téléphone de l'utilisateur: {$userPhone}</li>
-            </ul>
-            <p>BootCamps Centurio</p>
-        ";
+        return $this->twig->render('emails/reservation_payee_admin.html.twig', [
+            'product' => [
+                'forfait' => $product->getForfait(),
+            ],
+            'date' => $date,
+            'amount' => number_format($amount, 2, ',', ' '),
+            'user' => [
+                'email' => $userEmail,
+                'phone' => $userPhone
+            ]
+        ]);
     }
-    private function generateParticipantEmailContent($participant, $booking): string
+    private function generateParticipantEmailContent($participant, Booking $booking): string
     {
         $product = $booking->getProduct();
         $date = $booking->getCreatedAt()->format('d/m/Y');
 
-        return "
-            <p>Bonjour {$participant->getName()},</p>
-            <p>Vous avez été ajouté à une réservation. Voici les détails de la réservation :</p>
-            <ul>
-                <li>Produit: {$product->getForfait()}</li>
-                <li>Descriptif: {$product->getDescription()}</li>
-                <li>Date: {$date}</li>
-            </ul>
-            <p>Merci.</p>
-            <p>BootCamps Centurio</p>
-        ";
+        return $this->twig->render('emails/ajout_participant.html.twig', [
+            'participant' => [
+                'name' => $participant->getName()
+            ],
+            'product' => [
+                'forfait' => $product->getForfait(),
+                'description' => $product->getDescription()
+            ],
+            'date' => $date
+        ]);
     }
-
 }

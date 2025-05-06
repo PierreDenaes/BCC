@@ -25,7 +25,7 @@ class Notification
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\ManyToOne(targetEntity: Booking::class)]
+    #[ORM\ManyToOne(targetEntity: Booking::class, inversedBy: 'notifications')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Booking $booking = null;
 
@@ -43,6 +43,8 @@ class Notification
     #[ORM\ManyToOne(targetEntity: Profile::class, inversedBy: 'notifications')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Profile $recipient = null;
+    
+
     
 
     public function __construct()
