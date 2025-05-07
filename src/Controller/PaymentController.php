@@ -135,7 +135,7 @@ class PaymentController extends AbstractController
 
                 $this->sendEmail(
                     $this->mailer,
-                    'contact@bootcampscenturio.com',
+                    'admin@bootcampscenturio.com',
                     'admin@bootcampscenturio.com',
                     'Nouvelle réservation payée',
                     $adminEmailContent

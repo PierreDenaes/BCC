@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+{% block body %}
+<div id="resetPasswordPage" class="d-flex justify-content-center align-items-center" style="min-height: 88vh; background-color: #000;">
+    <div class="p-5 rounded text-white" style="background: rgba(0, 0, 0, 0.6); max-width: 700px; width: 100%;">
+        <h1 class="text-center white-stroke mb-4">🔐 Réinitialiser ton mot de passe</h1>
+
+        {{ form_start(resetForm) }}
+            <div class="mb-3">
+                {{ form_label(resetForm.plainPassword, 'Nouveau mot de passe') }}
+                {{ form_widget(resetForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(resetForm.plainPassword) }}
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-light">Valider</button>
+            </div>
+        {{ form_end(resetForm) }}
+    </div>
+</div>
+{% endblock %}

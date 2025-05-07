@@ -36,3 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;

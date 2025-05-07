@@ -41,13 +41,18 @@ class CalendarManager {
                 initialView: 'dayGridMonth',
                 locale: frLocale,
                 dateClick: this.handleDateClick.bind(this),
-                events: {
-                    url: '/bookings',
-                    extraParams: () => ({ timezone: 'local' }),
-                    failure: () => {
-                        alert('Il y a eu une erreur lors de la récupération des événements.');
-                    },
-                    success: this.handleEventsSuccess.bind(this),
+                events: (info, successCallback, failureCallback) => {
+                    fetch('/bookings')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.handleEventsSuccess(data);
+                            const unselectables = this.getUnselectableDates();
+                            successCallback([...data, ...unselectables]);
+                        })
+                        .catch(() => {
+                            alert('Il y a eu une erreur lors de la récupération des événements.');
+                            failureCallback();
+                        });
                 },
                 eventClassNames: this.getEventClassNames.bind(this),
                 eventContent: this.getEventContent.bind(this),
@@ -60,18 +65,61 @@ class CalendarManager {
         }
     }
 
+    // Réintroduire la méthode getUnselectableDates() avec gestion des dates passées (1 an avant aujourd'hui jusqu'à hier)
+    getUnselectableDates() {
+        const dates = [];
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        const pastStart = new Date(today);
+        pastStart.setFullYear(today.getFullYear() - 1); // Limite de 1 an en arrière
+
+        // Ajouter toutes les dates passées (de pastStart à hier)
+        let current = new Date(pastStart);
+        while (current <= yesterday) {
+            dates.push({
+                start: current.toISOString().split('T')[0],
+                display: 'background',
+                overlap: false,
+                classNames: ['fc-disabled-date', 'fc-disabled-strike'],
+                title: "Ce jour n'est pas réservable. Un délai de 15 jours est requis pour l'organisation du bootcamp."
+            });
+            current.setDate(current.getDate() + 1);
+        }
+
+        // Ajouter les 14 prochains jours à partir d'aujourd'hui
+        for (let i = 0; i < 14; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            dates.push({
+                start: d.toISOString().split('T')[0],
+                display: 'background',
+                overlap: false,
+                classNames: ['fc-disabled-date', 'fc-disabled-strike'],
+                title: "Ce jour n'est pas réservable. Un délai de 15 jours est requis pour l'organisation du bootcamp."
+            });
+        }
+
+        return dates;
+    }
+
     // Gérer le clic sur une date
     handleDateClick(info) {
-        const selectedDate = info.dateStr.split('T')[0];
-        const today = new Date().toISOString().split('T')[0];
-
-        if (selectedDate <= today) {
-            alert("Les réservations pour aujourd'hui ou les dates passées ne sont pas autorisées.");
+        // Blocage pour les réservations avant 15 jours
+        const selectedDate = new Date(info.dateStr);
+        const today = new Date();
+        // Mettre les heures à 0 pour ignorer l'heure dans le calcul
+        selectedDate.setHours(0,0,0,0);
+        today.setHours(0,0,0,0);
+        const diffInDays = (selectedDate - today) / (1000 * 60 * 60 * 24);
+        if (diffInDays < 15) {
+            alert("Les réservations doivent être effectuées au moins 15 jours à l'avance.");
             return;
         }
 
-        if (!this.reservedDates.includes(selectedDate) ||
-            (this.reservedHalfDays[selectedDate] && this.reservedHalfDays[selectedDate].length < 2)) {
+        const selectedDateStr = info.dateStr.split('T')[0];
+        if (!this.reservedDates.includes(selectedDateStr) ||
+            (this.reservedHalfDays[selectedDateStr] && this.reservedHalfDays[selectedDateStr].length < 2)) {
             new BookingFormManager(info.dateStr, this.forfait);
         }
     }
@@ -111,11 +159,19 @@ class CalendarManager {
 
     // Personnaliser l'affichage des événements
     getEventContent(arg) {
+        // Ne pas afficher de contenu pour les événements de fond (grisés/barrés)
+        if (arg.event.display === 'background') {
+            return {
+                html: '',
+            };
+        }
+
         let timeText = '';
         if (arg.event.start) {
             const start = new Date(arg.event.start);
             timeText = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
+
         return {
             html: `<div class="fc-event-time">${timeText}</div><div class="fc-event-title">${arg.event.title}</div>`,
         };
@@ -433,3 +489,28 @@ class BookingFormManager {
 document.addEventListener('DOMContentLoaded', () => {
     new CalendarManager();
 });
+
+// Ajout du style pour les dates non sélectionnables
+const style = document.createElement('style');
+style.innerHTML = `
+.fc-disabled-date {
+  background-color: #eee !important;
+  pointer-events: none;
+}
+.fc-disabled-strike {
+  position: relative;
+}
+.fc-disabled-strike::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  width: 90%;
+  height: 2px;
+  background-color: #999;
+  transform: rotate(-15deg);
+  z-index: 10;
+  pointer-events: none;
+}
+`;
+document.head.appendChild(style);

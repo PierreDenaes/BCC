@@ -1,9 +1,35 @@
 <div class="container-fluid">
-{% for label, messages in app.flashes %}
-    {% for message in messages %}
-        <div class="alert alert-{{ label }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endfor %}
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="modal fade" id="flashModal" tabindex="-1" aria-labelledby="flashModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content bg-{{ label == 'success' ? 'success' : 'danger' }} text-white">
+						<div class="modal-body text-center fw-bold" id="flashModalMessage">
+							{{ message }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<script>
+				document.addEventListener('DOMContentLoaded', function () {
+const flashModal = new bootstrap.Modal(document.getElementById('flashModal'));
+const mainContent = document.querySelector('main');
+
+flashModal.show();
+
+// Empêche le focus sur le reste de la page
+if (mainContent) 
+mainContent.setAttribute('inert', '');
+
+
+setTimeout(() => {
+flashModal.hide();
+if (mainContent) 
+mainContent.removeAttribute('inert');
+
+}, 3000);
+});
+			</script>
+		{% endfor %}
+	{% endfor %}
 </div>

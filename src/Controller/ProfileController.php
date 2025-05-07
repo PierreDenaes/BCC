@@ -71,6 +71,9 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
+            // Vider avatarFile APRES flush pour permettre à VichUploader de faire son travail
+            $profile->setAvatarFile(null);
+
             return $this->redirectToRoute('app_profile');
         }
         // 🔔 Ajout du compteur de notifications non lues

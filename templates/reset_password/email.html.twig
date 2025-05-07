@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Réinitialisation de mot de passe</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .email-header {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .email-body {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .btn-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="email-header">
+        <h1>🔐 Réinitialisation de mot de passe</h1>
+    </div>
+    <div class="email-body">
+        <p>Bonjour,</p>
+        <p>Tu as demandé la réinitialisation de ton mot de passe. Clique sur le bouton ci-dessous pour définir un nouveau mot de passe :</p>
+
+        <p style="text-align: center;">
+            <a class="btn-link" href="{{ url('app_reset_password', {token: resetToken.token}) }}">Réinitialiser mon mot de passe</a>
+        </p>
+
+        <p>Ce lien expirera dans :
+            <strong>{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}</strong>.
+        </p>
+
+        <p>Si tu n’as pas fait cette demande, tu peux ignorer cet e-mail.</p>
+
+        <p>Cordialement,<br>L’équipe Bootcamps Centurio</p>
+    </div>
+    <div class="footer">
+        © 2025 Bootcamps Centurio – Tous droits réservés
+    </div>
+</div>
+</body>
+</html>
