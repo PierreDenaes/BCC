@@ -1,75 +1,75 @@
 
 	<aside id="sidebar">
-			<button id="toggle-btn" type="button" class="m-0 p-0">
-				<img class="img-fluid accueil" src="{{ asset('images/LogoBootcampsCenturio.jpg') }}"></button>
+			<button id="toggle-btn" type="button" class="m-0 p-0" aria-label="Toggle navigation">
+				<img class="img-fluid accueil" src="{{ asset('images/LogoBootcampsCenturio.jpg') }}" alt="logo bootcamps centurion"></button>
 				<ul class="sidebar-nav">
 			<li class="sidebar-item">
-				<a href="{{ path('app_home') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Accueil">
+				<a href="{{ path('app_home') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Accueil" aria-label="Accueil">
 					<i class="lni lni-home-2"></i>
 					<span>Accueil</span>
 				</a>
 			</li>
 			<li class="sidebar-item">
-				<a href="{{ path('app_home') }}#accueilInstructor" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="A Propos">
+				<a href="{{ path('app_home') }}#accueilInstructor" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="A Propos" aria-label="A Propos">
 					<i class="lni lni-target-user"></i>
 					<span>A Propos</span>
 				</a>
 			</li>
 			<li class="sidebar-item">
-				<a href="{{ path('app_home') }}#accueilBootcamp" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Nos BootCamps">
+				<a href="{{ path('app_home') }}#accueilBootcamp" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Nos BootCamps" aria-label="Nos BootCamps">
 					<i class="lni lni-rocket-5"></i>
 					<span>Nos BootCamps</span>
 				</a>
 			</li>
 			<li class="sidebar-item">
-				<a href="{{ path('gallery_index' )}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Galerie">
+				<a href="{{ path('gallery_index' )}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Galerie" aria-label="Galerie">
 					<i class="lni lni-photos"></i>
 					<span>Galerie</span>
 				</a>
 			</li>
 			{% if not app.user %}
 			<li class="sidebar-item">
-				<a href="{{ path('app_register')}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="S'inscrire">
+				<a href="{{ path('app_register')}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="S'inscrire" aria-label="S'inscrire">
 					<i class="lni lni-thumbs-up-3"></i>
 					<span>S'inscrire</span>
 				</a>
 			</li>
 			<li class="sidebar-item">
-				<a href="{{ path('app_login') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Connexion">
+				<a href="{{ path('app_login') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Connexion" aria-label="Connexion">
 					<i class="lni lni-enter"></i>
 					<span>Connexion</span>
 				</a>
 			</li>
 			{% else %}
 			<li class="sidebar-item">
-				<a href="{{ path('app_profile')}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Profil">
+				<a href="{{ path('app_profile')}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Profil" aria-label="Profil">
 					<i class="lni lni-user-4"></i>
 					<span>Profil</span>
 				</a>
 			</li>
 			<li class="sidebar-item">
-				<a href="{{ path('book')}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Reserver">
+				<a href="{{ path('book')}}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Reserver" aria-label="Reserver">
 					<i class="lni lni-calendar-days"></i>
 					<span>Reserver</span>
 				</a>
 			</li>
 			{% if is_granted('ROLE_ADMIN') %}
 			<li class="sidebar-item">
-				<a href="{{ path('admin') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Administration">
+				<a href="{{ path('admin') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Administration" aria-label="Administration">
 					<i class="lni lni-connectdevelop"></i>
 					<span>Administration</span>
 				</a>
 			</li>
 			{% endif %}
 			<li class="sidebar-item">
-				<a href="{{ path('app_logout') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Déconnexion">
+				<a href="{{ path('app_logout') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Déconnexion" aria-label="Déconnexion">
 					<i class="lni lni-exit"></i>
 					<span>Déconnexion</span>
 				</a>
 			</li>
 			{% endif %}
 			<li class="sidebar-item">
-				<a href="{{ path('app_contact') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Contact">
+				<a href="{{ path('app_contact') }}" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Contact" aria-label="Contact">
 					<i class="lni lni-message-2"></i>
 					<span>Contact</span>
 				</a>

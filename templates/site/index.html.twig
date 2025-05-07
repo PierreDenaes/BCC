@@ -9,6 +9,7 @@ Rejoignez les bootcamps de Moussa Camara : aventure, discipline et esprit d'équ
 Transformez votre esprit d’équipe avec nos stages bootcamp encadrés par un ancien militaire. Inoubliable et stimulant !
 {% endblock %}
 {% block stylesheets %}
+<link rel="preload" as="image" href="{{ asset('images/site/logo-couleur-bootcamp.webp') }}">
 	{{ parent() }}
 	{{ encore_entry_link_tags('home') }}
 
@@ -27,7 +28,7 @@ Transformez votre esprit d’équipe avec nos stages bootcamp encadrés par un a
 			👈 Menu</span>
 		<img class="mt-5 transition-image" src="{{ asset('images/site/logo-couleur-bootcamp.webp') }}" alt="logo bootcamps centurio">
 		<div class="arrow-container">
-			<a href="#accueilBoot" class="arrow">
+			<a href="#accueilBoot" class="arrow" aria-label="Scroll down">
 				<i class="lni lni-angle-double-down"></i>
 			</a>
 		</div>
