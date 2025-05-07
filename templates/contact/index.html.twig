@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
+
+{% block meta_description %}
+Besoin d’un renseignement ou d’un devis ? Contacte-nous via ce formulaire. Nous te répondrons dans les meilleurs délais.
+{% endblock %}
+{% block og_title %}Contact – Bootcamps Centurio{% endblock %}
+{% block og_description %}
+Un projet ? Une question ? Envoie-nous un message et l’équipe Bootcamps Centurio reviendra vers toi rapidement.
+{% endblock %}
+
 {% block title %}Contact - Bootcamps Centurio{% endblock %}
 {% block stylesheets %}
 	{{ parent() }}
@@ -7,7 +16,7 @@
 
 {% endblock %}
 {% block body %}
-<div id="contactPage" class="d-flex justify-content-center align-items-center" style="min-height: 88vh; background-color: #000;">
+<div id="contactPage" class="d-flex container-fluid justify-content-center align-items-center" style="min-height: 88vh; background-color: #000;">
     <div id="contactCard" class="p-5 rounded text-white" style="background: rgba(0, 0, 0, 0.6); max-width: 800px; width: 100%;">
         <h1 class="text-center white-stroke mb-4">📬 Contacte-nous</h1>
 

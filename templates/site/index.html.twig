@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil
+{% block title %}Accueil – Bootcamps Centurio{% endblock %}
+{% block meta_description %}
+Rejoignez les bootcamps de Moussa Camara : aventure, discipline et esprit d'équipe pour particuliers et entreprises. Une expérience unique à vivre en groupe.
+{% endblock %}
+{% block og_title %}Bootcamps Centurio – Aventure et Discipline{% endblock %}
+{% block og_description %}
+Transformez votre esprit d’équipe avec nos stages bootcamp encadrés par un ancien militaire. Inoubliable et stimulant !
 {% endblock %}
 {% block stylesheets %}
 	{{ parent() }}
@@ -44,7 +50,7 @@
 					En plus de ses compétences techniques, Moussa est également un mentor dévoué. Il s'efforce de développer l'état d'esprit nécessaire pour surmonter les obstacles et atteindre des objectifs ambitieux. Sa philosophie de l'entraînement va au-delà de la simple préparation physique; il encourage une croissance personnelle complète, intégrant la force mentale et la résilience émotionnelle.
 				</p>
 				<div class="text-center mt-3 mt-lg-5">
-					<a href="#" class="btn btn-blueboot fs-5 border border-2 fw-bold shadow">Nous Contacter</a>
+					<a href="{{ path('app_contact') }}" class="btn btn-blueboot fs-5 border border-2 fw-bold shadow">Nous Contacter</a>
 				</div>
 			</div>
 			<div class="col-lg-6 text-center order-1 order-lg-2">

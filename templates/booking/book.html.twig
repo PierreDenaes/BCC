@@ -1,6 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Réserver un bootcamp{% endblock %}
+{% block title %}Réserver un Bootcamp – Bootcamps Centurio{% endblock %}
+{% block meta_description %}
+Choisis ta date et réserve ton Bootcamp Centurio en ligne. Un challenge unique t’attend !
+{% endblock %}
+{% block og_title %}Réservation – Bootcamps Centurio{% endblock %}
+{% block og_description %}
+Sélectionne un bootcamp et lance-toi dans une aventure physique et mentale avec Bootcamps Centurio.
+{% endblock %}
+
+
 {% block stylesheets %}
 	{{ parent() }}
 	{{ encore_entry_link_tags('calendar') }}
@@ -37,5 +46,3 @@
         </div>
     </div>
 {% endblock %}
-
-

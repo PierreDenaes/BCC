@@ -3,8 +3,26 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}Découvrez nos bootcamps d'aventure militaire pour particuliers et professionnels.{% endblock %}">
+        <meta name="robots" content="index, follow">
+
+        <meta property="og:title" content="{% block og_title %}Bootcamps Centurio{% endblock %}">
+        <meta property="og:description" content="{% block og_description %}Découvrez nos bootcamps d'aventure militaire en équipe !{% endblock %}">
+        <meta property="og:image" content="{{ asset('images/site/logo-couleur-bootcamp.webp') }}">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ app.request.uri }}">
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Bootcamps Centurio",
+            "url": "https://bootcampscenturio.com",
+            "logo": "https://bootcampscenturio.com/images/site/logo-couleur-bootcamp.webp",
+            "description": "Bootcamps militaires et aventures encadrés par des professionnels"
+        }
+        </script>
         <link rel="icon" href="{{ asset('images/LogoBootcampsCenturio.jpg') }}">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}

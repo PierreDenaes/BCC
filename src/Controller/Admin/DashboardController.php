@@ -9,6 +9,8 @@ use App\Entity\Product;
 use App\Entity\Notification;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\ProductCrudController;
+use App\Entity\Answer;
+use App\Entity\Faq;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -48,6 +50,8 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa-solid fa-screwdriver-wrench');
+        yield MenuItem::linkToCrud('F.A.Q', 'fa-solid fa-question', Faq::class);
+        yield MenuItem::linkToCrud('Réponses F.A.Q', 'fa-solid fa-question', Answer::class);
         yield MenuItem::section('Gestion des BootCamps');
         yield MenuItem::linkToCrud('Notifications', 'fas fa-bell', Notification::class);
         yield MenuItem::linkToCrud('Les BootCamps', 'fa-solid fa-campground', Product::class);

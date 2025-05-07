@@ -87,8 +87,8 @@ class CalendarManager {
             current.setDate(current.getDate() + 1);
         }
 
-        // Ajouter les 14 prochains jours à partir d'aujourd'hui
-        for (let i = 0; i < 14; i++) {
+        // Ajouter les 14 prochains jours à partir d'aujourd'hui (inclus le 14e jour)
+        for (let i = 0; i <= 14; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() + i);
             dates.push({

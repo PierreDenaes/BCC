@@ -56,7 +56,7 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address('admin@bootcampscenturio.com', 'BootCamps Centurio'))
                     ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Vérification de votre adresse e-mail')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
 
